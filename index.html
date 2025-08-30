@@ -21,994 +21,290 @@
     <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center fade-in">
         <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-white text-3xl font-bold">📚</span>
+                <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <span class="text-3xl text-emerald-600">📖</span>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900">Jurnal Mengaji</h2>
-                <p class="text-gray-500 mt-1">Masuk untuk melanjutkan</p>
+                <h2 class="text-3xl font-bold text-gray-900">Jurnal Mengaji</h2>
+                <p class="text-gray-500 text-sm mt-1">Masuk sebagai Guru/Admin atau Wali Murid</p>
             </div>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label for="loginUsername" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                    <input type="text" id="loginUsername" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2" required>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 text-sm font-semibold mb-2">Username</label>
+                    <input type="text" id="username" name="username" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Masukkan username" required>
                 </div>
-                <div>
-                    <label for="loginPassword" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
-                    <input type="password" id="loginPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2" required>
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                    <input type="password" id="password" name="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500" placeholder="Masukkan password" required>
                 </div>
-                <div>
-                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                        Masuk
-                    </button>
-                </div>
+                <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 px-4 rounded-md hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-50 transition-colors duration-300">Masuk</button>
             </form>
-            <p id="loginMessage" class="mt-4 text-center text-red-600 hidden"></p>
+            <p class="text-xs text-center text-gray-400 mt-4">Demo: admin/admin</p>
         </div>
     </div>
 
-    <div id="mainContent" class="hidden container mx-auto p-4 md:p-8">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8" id="mainHeader">
-            <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center">
-                    <span class="text-white text-xl font-bold">📚</span>
-                </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Jurnal Mengaji</h1>
-                    <p class="text-gray-600">Selamat datang, <span id="currentUserName" class="font-semibold"></span>!</p>
-                </div>
+    <div id="mainContent" class="hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-40">
+            <h1 class="text-xl font-bold text-gray-900">Dashboard</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-700 font-medium">Masuk sebagai: <span id="loggedInAs" class="text-emerald-600"></span></span>
+                <button onclick="logout()" class="text-sm font-semibold text-gray-500 hover:text-red-500 transition-colors duration-200">Keluar</button>
             </div>
-            <button id="logoutButton" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md shadow-sm transition-colors duration-200" onclick="logout()">
-                Keluar
-            </button>
         </header>
 
-        <div id="adminTeacherDashboard" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="dashboardStats">
+        <div id="parentDashboard" class="hidden container mx-auto px-4 py-8 max-w-4xl fade-in">
+            <h2 id="childProgressTitle" class="text-2xl font-bold text-gray-900 mb-6">Progress Anak Anda</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Total Santri</h3>
-                    <p id="totalStudents" class="text-4xl font-bold text-emerald-600 mt-2">0</p>
+                    <h3 class="text-lg font-semibold text-gray-700">Capaian Kibar/Al Quran</h3>
+                    <p id="childKibarAchievement" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
                 </div>
                 <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Pencapaian Al-Qur'an</h3>
-                    <p id="alQuranCount" class="text-4xl font-bold text-emerald-600 mt-2">0</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Pencapaian Kibar</h3>
-                    <div class="flex justify-around items-center mt-2 text-sm">
-                        <div>
-                            <span id="kibarACount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar A</p>
-                        </div>
-                        <div>
-                            <span id="kibarBCount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar B</p>
-                        </div>
-                        <div>
-                            <span id="kibarCCount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar C</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Aktivitas Terkini</h3>
-                    <div id="recentActivities" class="space-y-2"></div>
+                    <h3 class="text-lg font-semibold text-gray-700">Progress Tahfidz</h3>
+                    <p id="childTahfidzProgress" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
+                    <p id="childClass" class="text-gray-500 mt-1">Kelas: N/A</p>
                 </div>
             </div>
-
             <div class="bg-white rounded-lg shadow p-6">
-                <div class="border-b border-gray-200 mb-6">
-                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <button id="tab-dashboard" onclick="showTab('dashboard')" class="tab-button border-b-2 border-emerald-500 py-2 px-1 text-sm font-medium text-emerald-600 hover:text-emerald-800 transition-colors duration-200">Dashboard</button>
-                        <button id="tab-students" onclick="showTab('students')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Daftar Santri</button>
-                        <button id="tab-journal" onclick="showTab('journal')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Jurnal Harian</button>
-                        <button id="tab-exams" onclick="showTab('exams')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Ujian & Pencapaian</button>
-                    </nav>
-                </div>
-            
-                <div id="tabContent">
-                    <div id="content-dashboard" class="tab-content fade-in">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-lg shadow">
-                                <h3 class="text-xl font-bold mb-4 text-gray-900">Aksi Cepat</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button onclick="showAddStudentModal()" class="flex flex-col items-center justify-center p-4 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">➕</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Tambah Santri</span>
-                                    </button>
-                                    <button onclick="showAddJournalModal()" class="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">📝</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Buat Jurnal</span>
-                                    </button>
-                                    <button onclick="showAddExamModal()" class="flex flex-col items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">🗓️</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Jadwalkan Ujian</span>
-                                    </button>
-                                    <button onclick="showAddExamResultModal()" class="flex flex-col items-center justify-center p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">🏆</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Input Hasil Ujian</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="bg-white p-6 rounded-lg shadow">
-                                <h3 class="text-xl font-bold mb-4 text-gray-900">Aktivitas Terkini</h3>
-                                <div id="dashboardRecentActivities" class="space-y-3">
-                                    <div class="text-center text-gray-500 text-sm">Belum ada aktivitas.</div>
-                                </div>
-                            </div>
-                        </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-4">Aktivitas Mengaji</h3>
+                <div id="childActivities" class="space-y-4">
                     </div>
-            
-                    <div id="content-students" class="tab-content hidden fade-in">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Daftar Santri</h2>
-                        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4 items-center">
-                            <input type="text" id="studentSearchInput" oninput="filterStudents()" placeholder="Cari nama santri..." class="w-full md:w-1/3 p-2 border rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
-                            <select id="classFilter" onchange="filterStudents()" class="w-full md:w-auto p-2 border rounded-md shadow-sm">
-                                <option value="">Semua Kelas</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                            </select>
-                            <button onclick="showAddStudentModal()" class="w-full md:w-auto py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-2"></i> Tambah Santri
-                            </button>
-                        </div>
-                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
-                            <table class="w-full text-sm text-left text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">NIS</th>
-                                        <th scope="col" class="px-6 py-3">Nama Santri</th>
-                                        <th scope="col" class="px-6 py-3">Kelas</th>
-                                        <th scope="col" class="px-6 py-3">Nilai Tahsin</th>
-                                        <th scope="col" class="px-6 py-3">Juz Tahfidz</th>
-                                        <th scope="col" class="px-6 py-3">Capaian Kibar</th>
-                                        <th scope="col" class="px-6 py-3">Progress Tahfidz</th>
-                                        <th scope="col" class="px-6 py-3">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-right">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="studentsTable">
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
-            
-                    <div id="content-journal" class="tab-content hidden fade-in">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-xl font-bold text-gray-900">Jurnal Harian</h2>
-                            <button onclick="showAddJournalModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-2"></i> Tambah Jurnal
-                            </button>
-                        </div>
-                        <div id="journalEntries" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            </div>
-                    </div>
-            
-                    <div id="content-exams" class="tab-content hidden fade-in">
-                        <div class="mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-gray-900">Jadwal Ujian</h2>
-                                <button onclick="showAddExamModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700">
-                                    <i class="fas fa-plus mr-2"></i> Tambah Jadwal
-                                </button>
-                            </div>
-                            <div id="examSchedule" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
-                        </div>
-                        <div class="mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-gray-900">Hasil Ujian</h2>
-                                <button onclick="showAddExamResultModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700">
-                                    <i class="fas fa-plus mr-2"></i> Tambah Hasil
-                                </button>
-                            </div>
-                            <div id="examResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
-                        </div>
-                        <div class="mb-8">
-                            <h2 class="text-xl font-bold text-gray-900 mb-4">Pencapaian</h2>
-                            <div id="alQuranAchievements" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                                </div>
-                            <div id="kibarAchievements" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
 
-     <div id="parentDashboard" class="hidden">
-    <h2 id="childProgressTitle" class="text-2xl font-bold text-gray-900 mb-6">Progress Anak Anda</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 text-center">
-            <h3 class="text-lg font-semibold text-gray-700">Capaian Kibar/Al Quran</h3>
-            <p id="childKibarAchievement" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6 text-center">
-            <h3 class="text-lg font-semibold text-gray-700">Progress Tahfidz</h3>
-            <p id="childTahfidzProgress" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
-            <p id="childClass" class="text-gray-500 mt-1">Kelas: N/A</p>
+        <div id="adminDashboard" class="hidden container mx-auto px-4 py-8 max-w-6xl fade-in">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                <div class="mb-4 md:mb-0">
+                    <h2 class="text-2xl font-bold text-gray-900">Dashboard Admin</h2>
+                    <p class="text-gray-500 text-sm">Kelola data siswa dan jurnal harian.</p>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="showAddStudentModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-200 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Tambah Siswa
+                    </button>
+                    <button onclick="showAddJournalModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-200 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Tambah Jurnal
+                    </button>
+                    <button onclick="showAddExamModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-200 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Tambah Ujian
+                    </button>
+                    <button onclick="showAddExamResultModal()" class="bg-emerald-600 text-white px-4 py-2 rounded-md hover:bg-emerald-700 transition-colors duration-200 text-sm flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg>
+                        Tambah Hasil Ujian
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">NIS</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Kelas</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Capaian Kibar/Al Quran</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Juz Tahfidz</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nilai Tahsin</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Progress Tahfidz</th>
+                                <th class="py-3 px-4 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">Aktivitas Mengaji</h3>
-        <div id="childActivities" class="space-y-4">
-        </div>
-    </div>
-</div>
-    <div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Tambah Santri Baru</h3>
-            <form id="studentForm" onsubmit="addStudent(event)">
-                <div class="space-y-3">
+
+    <div id="addStudentModal" class="modal fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 shadow-xl">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Tambah Siswa Baru</h3>
+            <form id="addStudentForm" onsubmit="addStudent(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
-                        <input type="text" id="studentNameInput" placeholder="Nama Santri" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="addStudentNis" class="block text-sm font-medium text-gray-700">NIS</label>
+                        <input type="text" id="addStudentNis" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">NIS</label>
-                        <input type="text" id="studentNisInput" placeholder="Nomor Induk Santri" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="addStudentClass" class="block text-sm font-medium text-gray-700">Kelas</label>
+                        <input type="text" id="addStudentClass" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-xs font-medium text-gray-700 mb-1">Kelas</label>
-                        <select id="studentClassInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="">Pilih Kelas</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                        </select>
+                        <label for="addStudentName" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <input type="text" id="addStudentName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
-                        <select id="studentKibarInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="Kibar A">Kibar A</option>
-                            <option value="Kibar B">Kibar B</option>
-                            <option value="Kibar C">Kibar C</option>
-                            <option value="Al Quran">Al Quran</option>
-                        </select>
+                        <label for="addStudentKibar" class="block text-sm font-medium text-gray-700">Capaian Kibar/Al Quran</label>
+                        <input type="text" id="addStudentKibar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
-                        <select id="studentJuzInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                        </select>
+                        <label for="addStudentJuz" class="block text-sm font-medium text-gray-700">Juz Tahfidz</label>
+                        <input type="text" id="addStudentJuz" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="addStudentTahsin" class="block text-sm font-medium text-gray-700">Nilai Tahsin</label>
+                        <input type="text" id="addStudentTahsin" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="addStudentTahfidz" class="block text-sm font-medium text-gray-700">Progress Tahfidz (%)</label>
+                        <input type="text" id="addStudentTahfidz" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="addStudentWaliUsername" class="block text-sm font-medium text-gray-700">Username Wali</label>
+                        <input type="text" id="addStudentWaliUsername" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="addStudentWaliPassword" class="block text-sm font-medium text-gray-700">Password Wali</label>
+                        <input type="text" id="addStudentWaliPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Santri
-                    </button>
-                    <button type="button" onclick="hideAddStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="button" onclick="hideAddStudentModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="editStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Edit Data Siswa</h3>
-            <form onsubmit="updateStudent(event)">
+    <div id="editStudentModal" class="modal fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 shadow-xl">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Edit Data Siswa</h3>
+            <form id="editStudentForm" onsubmit="updateStudent(event)">
                 <input type="hidden" id="editStudentId">
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">NIS</label>
-                            <input type="text" id="editStudentNis" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Kelas</label>
-                            <select id="editStudentClass" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="Al Quran">Al Quran</option>
-                            </select>
-                        </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="editStudentNis" class="block text-sm font-medium text-gray-700">NIS</label>
+                        <input type="text" id="editStudentNis" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
-                        <input type="text" id="editStudentName" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="editStudentClass" class="block text-sm font-medium text-gray-700">Kelas</label>
+                        <input type="text" id="editStudentClass" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
-                        <select id="editStudentKibar" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="Kibar A">Kibar A</option>
-                            <option value="Kibar B">Kibar B</option>
-                            <option value="Kibar C">Kibar C</option>
-                            <option value="Al Quran">Al Quran</option>
-                        </select>
+                        <label for="editStudentName" class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <input type="text" id="editStudentName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
-                        <select id="editStudentJuz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                        </select>
+                        <label for="editStudentKibar" class="block text-sm font-medium text-gray-700">Capaian Kibar/Al Quran</label>
+                        <input type="text" id="editStudentKibar" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahsin</label>
-                            <input type="number" id="editStudentTahsin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahfidz</label>
-                            <input type="number" id="editStudentTahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
-                        </div>
+                    <div>
+                        <label for="editStudentJuz" class="block text-sm font-medium text-gray-700">Juz Tahfidz</label>
+                        <input type="text" id="editStudentJuz" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="editStudentTahsin" class="block text-sm font-medium text-gray-700">Nilai Tahsin</label>
+                        <input type="text" id="editStudentTahsin" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
+                    </div>
+                    <div>
+                        <label for="editStudentTahfidz" class="block text-sm font-medium text-gray-700">Progress Tahfidz (%)</label>
+                        <input type="text" id="editStudentTahfidz" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500">
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Perbarui Data
-                    </button>
-                    <button type="button" onclick="hideEditStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="button" onclick="hideEditStudentModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
     </div>
-    
-    <div id="addJournalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Tambah Jurnal Harian</h3>
-            <form onsubmit="addJournalEntry(event)">
-                <div class="space-y-3">
+
+    <div id="addJournalModal" class="modal fixed inset-0 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-lg w-full mx-4 shadow-xl">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Tambah Jurnal Harian</h3>
+            <form id="addJournalForm" onsubmit="addJournal(event)">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal</label>
-                        <input type="date" id="journalDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="addJournalStudent" class="block text-sm font-medium text-gray-700">Siswa</label>
+                        <select id="addJournalStudent" class="student-dropdown mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required></select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
-                        <select id="journalStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="">Pilih Santri</option>
-                        </select>
+                        <label for="addJournalDate" class="block text-sm font-medium text-gray-700">Tanggal</label>
+                        <input type="date" id="addJournalDate" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="addJournalNotes" class="block text-sm font-medium text-gray-700">Catatan Mengaji</label>
+                        <textarea id="addJournalNotes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500"></textarea>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan Mengaji</label>
-                        <textarea id="journalNotesInput" rows="3" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                        <select id="journalStatusInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="addJournalStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select id="addJournalStatus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500" required>
                             <option value="Selesai">Selesai</option>
                             <option value="Belum Selesai">Belum Selesai</option>
                         </select>
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Jurnal
-                    </button>
-                    <button type="button" onclick="hideAddJournalModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="mt-6 flex justify-end space-x-2">
+                    <button type="button" onclick="hideAddJournalModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Batal</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="addExamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Jadwalkan Ujian</h3>
-            <form onsubmit="addExamSchedule(event)">
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Ujian</label>
-                        <input type="date" id="examDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
-                        <input type="text" id="examSubjectInput" placeholder="Tahsin, Tahfidz Juz 30, dll." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Deskripsi Tambahan</label>
-                        <textarea id="examDescriptionInput" rows="3" placeholder="Misal: Ujian hafalan surat An-Naba" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500"></textarea>
-                    </div>
-                </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-sm font-medium">
-                        Jadwalkan
-                    </button>
-                    <button type="button" onclick="hideAddExamModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <div id="addExamResultModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Input Hasil Ujian</h3>
-            <form onsubmit="addExamResult(event)">
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
-                        <select id="examStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
-                            <option value="">Pilih Santri</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
-                        <input type="text" id="examResultSubjectInput" placeholder="Materi Ujian" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nilai</label>
-                        <input type="number" id="examScoreInput" placeholder="Contoh: 85.5" step="0.01" min="0" max="100" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan</label>
-                        <textarea id="examResultNotesInput" rows="3" placeholder="Catatan tambahan..." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500"></textarea>
-                    </div>
-                </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Hasil
-                    </button>
-                    <button type="button" onclick="hideAddExamResultModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="handlelogin (2).js"></script>
+
     <script>
-        const studentData = JSON.parse(localStorage.getItem('studentData')) || [];
-        const journalEntries = JSON.parse(localStorage.getItem('journalEntries')) || [];
-        const examSchedule = JSON.parse(localStorage.getItem('examSchedule')) || [];
-        const examResults = JSON.parse(localStorage.getItem('examResults')) || [];
-
-        function renderStudentsTable(filteredStudents = studentData) {
-            const tableBody = document.getElementById('studentsTable');
-            tableBody.innerHTML = '';
-            filteredStudents.forEach((student, index) => {
-                const tahsinScore = student.tahsinScore ? student.tahsinScore.toFixed(2) : 'N/A';
-                const tahfidzProgress = student.tahfidzProgress ? student.tahfidzProgress.toFixed(2) + '%' : 'N/A';
-                const row = document.createElement('tr');
-                row.className = 'bg-white border-b hover:bg-gray-50';
-                row.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${student.nis}</td>
-                    <td class="px-6 py-4">${student.name}</td>
-                    <td class="px-6 py-4">${student.class}</td>
-                    <td class="px-6 py-4">${tahsinScore}</td>
-                    <td class="px-6 py-4">${student.juzTahfidz}</td>
-                    <td class="px-6 py-4">${student.kibarAchievement}</td>
-                    <td class="px-6 py-4">${tahfidzProgress}</td>
-                    <td class="px-6 py-4">${student.status}</td>
-                    <td class="px-6 py-4 text-right space-x-2">
-                        <button onclick="editStudent(${index})" class="font-medium text-blue-600 hover:underline">Edit</button>
-                        <button onclick="deleteStudent(${index})" class="font-medium text-red-600 hover:underline">Hapus</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        }
-    
-        function updateStudentDropdowns() {
-            const studentSelects = document.querySelectorAll('#journalStudentIdInput, #examStudentIdInput');
-            studentSelects.forEach(select => {
-                select.innerHTML = '<option value="">Pilih Santri</option>';
-                studentData.forEach(student => {
-                    const option = document.createElement('option');
-                    option.value = student.id;
-                    option.textContent = `${student.name} (${student.nis})`;
-                    select.appendChild(option);
-                });
-            });
-        }
-    
-        function updateAchievementCounts() {
-            const alQuranCount = studentData.filter(s => s.kibarAchievement === 'Al Quran').length;
-            const kibarACount = studentData.filter(s => s.kibarAchievement === 'Kibar A').length;
-            const kibarBCount = studentData.filter(s => s.kibarAchievement === 'Kibar B').length;
-            const kibarCCount = studentData.filter(s => s.kibarAchievement === 'Kibar C').length;
-            document.getElementById('totalStudents').textContent = studentData.length;
-            document.getElementById('alQuranCount').textContent = alQuranCount;
-            document.getElementById('kibarACount').textContent = kibarACount;
-            document.getElementById('kibarBCount').textContent = kibarBCount;
-            document.getElementById('kibarCCount').textContent = kibarCCount;
-        }
-    
-        function renderJournalEntries() {
-            const journalContainer = document.getElementById('journalEntries');
-            journalContainer.innerHTML = '';
-            if (journalEntries.length === 0) {
-                journalContainer.innerHTML = '<p class="text-center text-gray-500">Belum ada jurnal harian.</p>';
-                return;
-            }
-            journalEntries.forEach(entry => {
-                const student = studentData.find(s => s.id === entry.studentId) || { name: 'Santri Tidak Ditemukan' };
-                const card = document.createElement('div');
-                card.className = 'bg-gray-50 rounded-lg p-4 shadow-sm fade-in';
-                card.innerHTML = `
-                    <div class="flex items-center mb-2">
-                        <span class="text-lg mr-2">${entry.status === 'Selesai' ? '✅' : '⏳'}</span>
-                        <h4 class="font-semibold text-gray-900">${student.name}</h4>
-                    </div>
-                    <p class="text-xs text-gray-500 mb-1">Tanggal: ${entry.date}</p>
-                    <p class="text-sm text-gray-700">${entry.notes}</p>
-                    <button onclick="deleteJournalEntry(${entry.id})" class="mt-2 text-xs text-red-500 hover:text-red-700">Hapus</button>
-                `;
-                journalContainer.appendChild(card);
-            });
-        }
-
-        function renderExamSchedule() {
-            const container = document.getElementById('examSchedule');
-            container.innerHTML = '';
-            if (examSchedule.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada jadwal ujian.</p>';
-                return;
-            }
-            examSchedule.forEach(exam => {
-                const card = document.createElement('div');
-                card.className = 'bg-purple-50 rounded-lg p-4 shadow-sm fade-in';
-                card.innerHTML = `
-                    <h4 class="font-semibold text-purple-900">${exam.subject}</h4>
-                    <p class="text-sm text-purple-700 mt-1">🗓️ Tanggal: ${exam.date}</p>
-                    <p class="text-sm text-purple-700 mt-1">${exam.description}</p>
-                    <button onclick="deleteExamSchedule(${exam.id})" class="mt-2 text-xs text-red-500 hover:text-red-700">Hapus</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderExamResults() {
-            const container = document.getElementById('examResults');
-            container.innerHTML = '';
-            if (examResults.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada hasil ujian.</p>';
-                return;
-            }
-            examResults.forEach(result => {
-                const student = studentData.find(s => s.id === result.studentId) || { name: 'Santri Tidak Ditemukan' };
-                const card = document.createElement('div');
-                card.className = 'bg-orange-50 rounded-lg p-4 shadow-sm fade-in';
-                card.innerHTML = `
-                    <h4 class="font-semibold text-orange-900">${student.name}</h4>
-                    <p class="text-sm text-gray-700 mt-1">Materi: ${result.subject}</p>
-                    <p class="text-lg font-bold text-orange-700 mt-1">Nilai: ${result.score}</p>
-                    <p class="text-sm text-gray-500 mt-1">Catatan: ${result.notes}</p>
-                `;
-                container.appendChild(card);
-            });
-        }
-    
-        function renderAchievementList() {
-            const alQuranContainer = document.getElementById('alQuranAchievements');
-            const kibarContainer = document.getElementById('kibarAchievements');
-            alQuranContainer.innerHTML = '';
-            kibarContainer.innerHTML = '';
-            const alQuranAchievers = studentData.filter(s => s.kibarAchievement === 'Al Quran');
-            const kibarAchievers = studentData.filter(s => s.kibarAchievement !== 'Al Quran');
-            if (alQuranAchievers.length > 0) {
-                alQuranAchievers.forEach(student => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-lg p-4 shadow-sm';
-                    card.innerHTML = `<h4 class="font-semibold text-gray-900">${student.name}</h4><p class="text-sm text-emerald-600">Capaian: Al-Qur'an</p>`;
-                    alQuranContainer.appendChild(card);
-                });
-            } else {
-                alQuranContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada santri mencapai Al-Qur\'an.</p>';
-            }
-            if (kibarAchievers.length > 0) {
-                kibarAchievers.forEach(student => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-lg p-4 shadow-sm';
-                    card.innerHTML = `<h4 class="font-semibold text-gray-900">${student.name}</h4><p class="text-sm text-blue-600">Capaian: ${student.kibarAchievement}</p>`;
-                    kibarContainer.appendChild(card);
-                });
-            } else {
-                kibarContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">Belum ada santri mencapai Kibar.</p>';
-            }
-        }
-
-        function renderRecentActivities() {
-            const activitiesContainer = document.getElementById('recentActivities');
-            const dashboardActivitiesContainer = document.getElementById('dashboardRecentActivities');
-            activitiesContainer.innerHTML = '';
-            dashboardActivitiesContainer.innerHTML = '';
-            if (journalEntries.length === 0) {
-                activitiesContainer.innerHTML = '<p class="text-center text-gray-500 text-sm">Belum ada aktivitas.</p>';
-                return;
-            }
-            const recent = journalEntries.slice(-5).reverse();
-            recent.forEach(entry => {
-                const student = studentData.find(s => s.id === entry.studentId) || { name: 'Santri Tidak Ditemukan' };
-                const activityDiv = document.createElement('div');
-                activityDiv.className = 'bg-gray-100 p-2 rounded-md flex items-center space-x-2 text-sm';
-                activityDiv.innerHTML = `
-                    <span class="text-lg">${entry.status === 'Selesai' ? '✅' : '⏳'}</span>
-                    <p class="text-gray-700 truncate">${student.name} (${entry.date}) - ${entry.notes}</p>
-                `;
-                activitiesContainer.appendChild(activityDiv);
-                dashboardActivitiesContainer.appendChild(activityDiv.cloneNode(true));
-            });
-        }
-    
-        function addStudent(event) {
-            event.preventDefault();
-            const name = document.getElementById('studentNameInput').value;
-            const nis = document.getElementById('studentNisInput').value;
-            const studentClass = document.getElementById('studentClassInput').value;
-            const kibarAchievement = document.getElementById('studentKibarInput').value;
-            const juzTahfidz = document.getElementById('studentJuzInput').value;
-            const newStudent = {
-                id: Date.now(),
-                nis: nis,
-                name: name,
-                class: studentClass,
-                tahsinScore: null,
-                tahfidzProgress: null,
-                juzTahfidz: juzTahfidz,
-                kibarAchievement: kibarAchievement,
-                status: 'Aktif',
-            };
-            studentData.push(newStudent);
-            localStorage.setItem('studentData', JSON.stringify(studentData));
-            renderStudentsTable();
-            updateStudentDropdowns();
-            updateAchievementCounts();
-            hideAddStudentModal();
-        }
-    
-        function editStudent(index) {
-            const student = studentData[index];
-            document.getElementById('editStudentId').value = index;
-            document.getElementById('editStudentNis').value = student.nis;
-            document.getElementById('editStudentClass').value = student.class;
-            document.getElementById('editStudentName').value = student.name;
-            document.getElementById('editStudentKibar').value = student.kibarAchievement;
-            document.getElementById('editStudentJuz').value = student.juzTahfidz;
-            document.getElementById('editStudentTahsin').value = student.tahsinScore || '';
-            document.getElementById('editStudentTahfidz').value = student.tahfidzProgress || '';
-            showEditStudentModal();
-        }
-
-        function updateStudent(event) {
-            event.preventDefault();
-            const index = document.getElementById('editStudentId').value;
-            const nis = document.getElementById('editStudentNis').value;
-            const studentClass = document.getElementById('editStudentClass').value;
-            const name = document.getElementById('editStudentName').value;
-            const kibarAchievement = document.getElementById('editStudentKibar').value;
-            const juzTahfidz = document.getElementById('editStudentJuz').value;
-            const tahsinScore = parseFloat(document.getElementById('editStudentTahsin').value);
-            const tahfidzProgress = parseFloat(document.getElementById('editStudentTahfidz').value);
-            studentData[index].nis = nis;
-            studentData[index].class = studentClass;
-            studentData[index].name = name;
-            studentData[index].kibarAchievement = kibarAchievement;
-            studentData[index].juzTahfidz = juzTahfidz;
-            studentData[index].tahsinScore = tahsinScore;
-            studentData[index].tahfidzProgress = tahfidzProgress;
-            localStorage.setItem('studentData', JSON.stringify(studentData));
-            renderStudentsTable();
-            updateAchievementCounts();
-            hideEditStudentModal();
-        }
-    
-        function deleteStudent(index) {
-            if (confirm('Apakah Anda yakin ingin menghapus santri ini?')) {
-                studentData.splice(index, 1);
-                localStorage.setItem('studentData', JSON.stringify(studentData));
-                renderStudentsTable();
-                updateStudentDropdowns();
-                updateAchievementCounts();
-            }
-        }
-    
-        function addJournalEntry(event) {
-            event.preventDefault();
-            const date = document.getElementById('journalDateInput').value;
-            const studentId = document.getElementById('journalStudentIdInput').value;
-            const notes = document.getElementById('journalNotesInput').value;
-            const status = document.getElementById('journalStatusInput').value;
-            const newEntry = {
-                id: Date.now(),
-                date: date,
-                studentId: parseInt(studentId),
-                notes: notes,
-                status: status
-            };
-            journalEntries.push(newEntry);
-            localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
-            renderJournalEntries();
-            renderRecentActivities();
-            hideAddJournalModal();
-        }
-    
-        function deleteJournalEntry(id) {
-            const index = journalEntries.findIndex(e => e.id === id);
-            if (index > -1) {
-                journalEntries.splice(index, 1);
-                localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
-                renderJournalEntries();
-                renderRecentActivities();
-            }
-        }
-
-        function addExamSchedule(event) {
-            event.preventDefault();
-            const date = document.getElementById('examDateInput').value;
-            const subject = document.getElementById('examSubjectInput').value;
-            const description = document.getElementById('examDescriptionInput').value;
-            const newExam = {
-                id: Date.now(),
-                date: date,
-                subject: subject,
-                description: description
-            };
-            examSchedule.push(newExam);
-            localStorage.setItem('examSchedule', JSON.stringify(examSchedule));
-            renderExamSchedule();
-            hideAddExamModal();
-        }
-
-        function deleteExamSchedule(id) {
-            const index = examSchedule.findIndex(e => e.id === id);
-            if (index > -1) {
-                examSchedule.splice(index, 1);
-                localStorage.setItem('examSchedule', JSON.stringify(examSchedule));
-                renderExamSchedule();
-            }
-        }
-
-        function addExamResult(event) {
-            event.preventDefault();
-            const studentId = document.getElementById('examStudentIdInput').value;
-            const subject = document.getElementById('examResultSubjectInput').value;
-            const score = document.getElementById('examScoreInput').value;
-            const notes = document.getElementById('examResultNotesInput').value;
-            const newResult = {
-                id: Date.now(),
-                studentId: parseInt(studentId),
-                subject: subject,
-                score: parseFloat(score),
-                notes: notes
-            };
-            examResults.push(newResult);
-            localStorage.setItem('examResults', JSON.stringify(examResults));
-            renderExamResults();
-            hideAddExamResultModal();
-        }
-
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('border-emerald-500', 'text-emerald-600', 'hover:text-emerald-800'));
-            document.querySelectorAll('.tab-button').forEach(button => button.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700'));
-            document.getElementById(`content-${tabName}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabName}`).classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
-            document.getElementById(`tab-${tabName}`).classList.add('border-emerald-500', 'text-emerald-600', 'hover:text-emerald-800');
-            if (tabName === 'students') renderStudentsTable();
-            if (tabName === 'journal') renderJournalEntries();
-            if (tabName === 'exams') {
-                renderExamSchedule();
-                renderExamResults();
-                renderAchievementList();
-            }
-        }
-
-        function filterStudents() {
-            const searchText = document.getElementById('studentSearchInput').value.toLowerCase();
-            const classFilter = document.getElementById('classFilter').value;
-            const filtered = studentData.filter(student => {
-                const matchesSearch = student.name.toLowerCase().includes(searchText) || student.nis.toLowerCase().includes(searchText);
-                const matchesClass = classFilter === '' || student.class === classFilter;
-                return matchesSearch && matchesClass;
-            });
-            renderStudentsTable(filtered);
-        }
-
+        // Fungsi untuk menampilkan modal tambah siswa
         function showAddStudentModal() {
             document.getElementById('addStudentModal').classList.remove('hidden');
         }
-        
+
+        // Fungsi untuk menyembunyikan modal tambah siswa
         function hideAddStudentModal() {
             document.getElementById('addStudentModal').classList.add('hidden');
-            document.getElementById('studentForm').reset();
+            document.getElementById('addStudentForm').reset();
         }
-        
-        function showEditStudentModal() {
-            document.getElementById('editStudentModal').classList.remove('hidden');
+
+        // Fungsi untuk menampilkan modal edit siswa
+        async function showEditStudentModal(studentId) {
+            const studentData = await fetchData('students');
+            const student = studentData.find(s => s.id == studentId);
+            if (student) {
+                document.getElementById('editStudentId').value = student.id;
+                document.getElementById('editStudentNis').value = student.nis;
+                document.getElementById('editStudentClass').value = student.class;
+                document.getElementById('editStudentName').value = student.name;
+                document.getElementById('editStudentKibar').value = student.kibarAchievement;
+                document.getElementById('editStudentJuz').value = student.juzTahfidz;
+                document.getElementById('editStudentTahsin').value = student.tahsinScore;
+                document.getElementById('editStudentTahfidz').value = student.tahfidzProgress;
+                document.getElementById('editStudentModal').classList.remove('hidden');
+            }
         }
-        
+
+        // Fungsi untuk menyembunyikan modal edit siswa
         function hideEditStudentModal() {
             document.getElementById('editStudentModal').classList.add('hidden');
         }
-        
+
+        // Fungsi untuk menampilkan modal tambah jurnal
         function showAddJournalModal() {
             updateStudentDropdowns();
             document.getElementById('addJournalModal').classList.remove('hidden');
         }
 
+        // Fungsi untuk menyembunyikan modal tambah jurnal
         function hideAddJournalModal() {
             document.getElementById('addJournalModal').classList.add('hidden');
             document.getElementById('addJournalModal').querySelector('form').reset();
         }
 
-        function showAddExamModal() {
-            updateStudentDropdowns();
-            document.getElementById('addExamModal').classList.remove('hidden');
-        }
-
-        function hideAddExamModal() {
-            document.getElementById('addExamModal').classList.add('hidden');
-            document.getElementById('addExamModal').querySelector('form').reset();
-        }
-        
-        function showAddExamResultModal() {
-            updateStudentDropdowns();
-            document.getElementById('addExamResultModal').classList.remove('hidden');
-        }
-
-        function hideAddExamResultModal() {
-            document.getElementById('addExamResultModal').classList.add('hidden');
-            document.getElementById('addExamResultModal').querySelector('form').reset();
-        }
-
-        function handleLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
-            const loginMessage = document.getElementById('loginMessage');
-
-            // Cek kredensial admin dan guru yang sudah ada
-            if (username === 'admin_tahfidz' && password === 'admin123') {
-                document.getElementById('currentUserName').textContent = 'Admin Tahfidz';
-                document.getElementById('adminTeacherDashboard').classList.remove('hidden');
-                document.getElementById('parentDashboard').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                document.getElementById('loginModal').classList.add('hidden');
-                renderStudentsTable();
-                updateStudentDropdowns();
-                updateAchievementCounts();
-                renderJournalEntries();
-                renderExamSchedule();
-                renderExamResults();
-                renderRecentActivities();
-                showTab('dashboard'); // Tampilkan dashboard utama
-            } else if (username === 'guru_tahfidz' && password === 'guru123') {
-                document.getElementById('currentUserName').textContent = 'Guru Tahfidz';
-                document.getElementById('adminTeacherDashboard').classList.remove('hidden');
-                document.getElementById('parentDashboard').classList.add('hidden');
-                document.getElementById('mainContent').classList.remove('hidden');
-                document.getElementById('loginModal').classList.add('hidden');
-                renderStudentsTable();
-                updateStudentDropdowns();
-                updateAchievementCounts();
-                renderJournalEntries();
-                renderExamSchedule();
-                renderExamResults();
-                renderRecentActivities();
-                showTab('dashboard'); // Tampilkan dashboard utama
-            } else if (username === 'walimurid') {
-                const child = studentData.find(s => s.nis === password);
-                if (child) {
-                    document.getElementById('currentUserName').textContent = 'Wali Murid';
-                    document.getElementById('adminTeacherDashboard').classList.add('hidden');
-                    document.getElementById('parentDashboard').classList.remove('hidden');
-                    document.getElementById('mainContent').classList.remove('hidden');
-                    document.getElementById('loginModal').classList.add('hidden');
-                    renderParentDashboard(child.id);
-                } else {
-                    loginMessage.textContent = 'NIS tidak ditemukan.';
-                    loginMessage.classList.remove('hidden');
-                }
-            } else {
-                loginMessage.textContent = 'Nama pengguna atau kata sandi salah.';
-                loginMessage.classList.remove('hidden');
-            }
-        }
-        
+        // Fungsi untuk keluar dari sesi
         function logout() {
-            document.getElementById('loginUsername').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginMessage').classList.add('hidden');
             document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('parentDashboard').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
             document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('loginForm').reset();
         }
 
-        function renderParentDashboard(studentId) {
-            const child = studentData.find(s => s.id === studentId);
-            if (!child) return;
-
-            // Update judul dan info anak
-            document.getElementById('childProgressTitle').textContent = `Progress ${child.name}`;
-            document.getElementById('childTahsinScore').textContent = child.tahsinScore ? child.tahsinScore.toFixed(2) : 'N/A';
-            document.getElementById('childTahfidzProgress').textContent = child.tahfidzProgress ? child.tahfidzProgress.toFixed(2) + '%' : 'N/A';
-            document.getElementById('childClass').textContent = `Kelas: ${child.class}`;
-
-            // Tampilkan aktivitas mengaji
-            const activitiesContainer = document.getElementById('childActivities');
-            activitiesContainer.innerHTML = '';
-            const childJournals = journalEntries.filter(entry => entry.studentId === studentId);
-            
-            if (childJournals.length === 0) {
-                activitiesContainer.innerHTML = '<p class="text-center text-gray-500">Belum ada jurnal harian.</p>';
-                return;
-            }
-
-            childJournals.forEach(entry => {
-                const activityDiv = document.createElement('div');
-                activityDiv.className = 'bg-gray-100 p-4 rounded-lg shadow-sm flex items-start space-x-3 fade-in';
-                activityDiv.innerHTML = `
-                    <span class="text-2xl">${entry.status === 'Selesai' ? '✅' : '⏳'}</span>
-                    <div>
-                        <p class="text-sm font-semibold text-gray-800">${entry.date}</p>
-                        <p class="text-sm text-gray-700 mt-1">${entry.notes}</p>
-                    </div>
-                `;
-                activitiesContainer.appendChild(activityDiv);
-            });
-        }
-
-        // Inisialisasi aplikasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            // Jika Anda ingin mempertahankan sesi login, Anda bisa menambahkan logika di sini
-            // Untuk saat ini, asumsikan pengguna perlu login setiap kali
-        });
+        // Catatan: Anda juga perlu memastikan bahwa fungsi-fungsi di file JS (`handlelogin (2).js`) yang kita buat sebelumnya sudah ditempatkan di file tersebut agar semua fungsionalitas berjalan dengan baik.
     </script>
-    </body>
+</body>
 </html>
