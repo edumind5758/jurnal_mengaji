@@ -1,29 +1,53 @@
-function updateStudent(event) {
-    event.preventDefault();
-    const index = document.getElementById('editStudentId').value;
-    const nis = document.getElementById('editStudentNis').value;
-    const studentClass = document.getElementById('editStudentClass').value;
-    const name = document.getElementById('editStudentName').value;
-    const kibarAchievement = document.getElementById('editStudentKibar').value;
-    const juzTahfidz = document.getElementById('editStudentJuz').value;
+function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const loginMessage = document.getElementById('loginMessage');
 
-    const tahsinInput = document.getElementById('editStudentTahsin').value;
-    const tahfidzInput = document.getElementById('editStudentTahfidz').value;
-
-    // Bagian ini yang penting: Cek jika input kosong
-    const tahsinScore = tahsinInput === '' ? null : parseFloat(tahsinInput);
-    const tahfidzProgress = tahfidzInput === '' ? null : parseFloat(tahfidzInput);
-
-    studentData[index].nis = nis;
-    studentData[index].class = studentClass;
-    studentData[index].name = name;
-    studentData[index].kibarAchievement = kibarAchievement;
-    studentData[index].juzTahfidz = juzTahfidz;
-    studentData[index].tahsinScore = tahsinScore; // Nilai bisa null
-    studentData[index].tahfidzProgress = tahfidzProgress; // Nilai bisa null
-
-    localStorage.setItem('studentData', JSON.stringify(studentData));
-    renderStudentsTable();
-    updateAchievementCounts();
-    hideEditStudentModal();
-}
+            // Cek kredensial admin dan guru yang sudah ada
+            if (username === 'admin_tahfidz' && password === 'admin123') {
+                document.getElementById('currentUserName').textContent = 'Admin Tahfidz';
+                document.getElementById('adminTeacherDashboard').classList.remove('hidden');
+                document.getElementById('parentDashboard').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('loginModal').classList.add('hidden');
+                renderStudentsTable();
+                updateStudentDropdowns();
+                updateAchievementCounts();
+                renderJournalEntries();
+                renderExamSchedule();
+                renderExamResults();
+                renderRecentActivities();
+                showTab('dashboard'); // Tampilkan dashboard utama
+            } else if (username === 'guru_tahfidz' && password === 'guru123') {
+                document.getElementById('currentUserName').textContent = 'Guru Tahfidz';
+                document.getElementById('adminTeacherDashboard').classList.remove('hidden');
+                document.getElementById('parentDashboard').classList.add('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('loginModal').classList.add('hidden');
+                renderStudentsTable();
+                updateStudentDropdowns();
+                updateAchievementCounts();
+                renderJournalEntries();
+                renderExamSchedule();
+                renderExamResults();
+                renderRecentActivities();
+                showTab('dashboard'); // Tampilkan dashboard utama
+            } else if (username === 'walimurid') {
+                const child = studentData.find(s => s.nis === password);
+                if (child) {
+                    document.getElementById('currentUserName').textContent = 'Wali Murid';
+                    document.getElementById('adminTeacherDashboard').classList.add('hidden');
+                    document.getElementById('parentDashboard').classList.remove('hidden');
+                    document.getElementById('mainContent').classList.remove('hidden');
+                    document.getElementById('loginModal').classList.add('hidden');
+                    renderParentDashboard(child.id);
+                } else {
+                    loginMessage.textContent = 'NIS tidak ditemukan.';
+                    loginMessage.classList.remove('hidden');
+                }
+            } else {
+                loginMessage.textContent = 'Nama pengguna atau kata sandi salah.';
+                loginMessage.classList.remove('hidden');
+            }
+        }
