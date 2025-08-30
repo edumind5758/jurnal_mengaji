@@ -1,4 +1,4 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyquWacoqOEbBkZMouWf_or_GmSDjsClqLmATVEExztus5eFYIbCe94lc1JXYUY_cCn/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoQwUDcUKVosWH1ZBNZhCfgx4WoNbvZmvMGzEvEjITyW3E2hkyQDd4P9ynjpnG9KHm/exec';
 
 // Daftar pengguna dan peran (roles)
 const users = {
