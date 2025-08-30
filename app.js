@@ -1,27 +1,5 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoQwUDcUKVosWH1ZBNZhCfgx4WoNbvZmvMGzEvEjITyW3E2hkyQDd4P9ynjpnG9KHm/exec';
 
-// Daftar pengguna dan peran (roles)
-const users = {
-    // Admin/Guru
-    'admin': { password: 'admin123', role: 'admin' },
-    'guru': { password: 'guru123', role: 'admin' },
-    // Orang Tua (contoh: 'orangtua_nama_santri' dengan password berupa NIS santri)
-    'orangtua_budi': { password: '101', role: 'parent', studentName: 'Budi Santoso' },
-    'orangtua_siti': { password: '202', role: 'parent', studentName: 'Siti Rahayu' }
-};
-
-const sheets = {
-    students: 'Santri',
-    journals: 'Jurnal',
-    exams: 'JadwalUjian',
-    examResults: 'HasilUjian'
-};
-
-let allStudents = [];
-let allJournals = [];
-let allExams = [];
-let allExamResults = [];
-
 // Fungsi untuk mengambil data dari Google Sheet
 async function fetchData(sheetName) {
     const url = `${SCRIPT_URL}?sheet=${sheetName}`;
@@ -62,281 +40,546 @@ async function manageData(method, sheetName, data, id = null) {
     }
 }
 
-// Render data untuk dashboard guru
-function renderAdminDashboard() {
-    renderStudentsTable(allStudents);
-    renderJournalsList();
-    renderExamsList();
-    renderExamResultsList();
-}
+// Variabel global untuk menyimpan data
+let studentData = [];
+let journalEntries = [];
+let examSchedule = [];
+let examResults = [];
 
-// Render data untuk dashboard orang tua
-function renderParentDashboard(studentName) {
-    const student = allStudents.find(s => s.Nama === studentName);
-    if (!student) {
-        document.getElementById('parentStudentName').textContent = 'Data santri tidak ditemukan.';
-        document.getElementById('parentStudentNis').textContent = '';
-        document.getElementById('parentJournalsList').innerHTML = '';
-        document.getElementById('parentExamResultsList').innerHTML = '';
-        return;
-    }
-
-    document.getElementById('parentStudentName').textContent = `Nama Santri: ${student.Nama}`;
-    document.getElementById('parentStudentNis').textContent = `NIS: ${student.NIS}`;
-    
-    // Filter jurnal dan hasil ujian berdasarkan nama santri
-    const studentJournals = allJournals.filter(j => j.NamaSantri === studentName);
-    const studentExamResults = allExamResults.filter(r => r.NamaSantri === studentName);
-
-    // Render jurnal anak
-    const parentJournalsList = document.getElementById('parentJournalsList');
-    parentJournalsList.innerHTML = '';
-    studentJournals.forEach(journal => {
-        const journalCard = document.createElement('div');
-        journalCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200';
-        journalCard.innerHTML = `
-            <h3 class="text-lg font-semibold text-gray-800">${journal.Tanggal}</h3>
-            <p class="text-sm text-gray-700 mt-1">${journal.Aktivitas}</p>
-        `;
-        parentJournalsList.appendChild(journalCard);
-    });
-
-    // Render hasil ujian anak
-    const parentExamResultsList = document.getElementById('parentExamResultsList');
-    parentExamResultsList.innerHTML = '';
-    studentExamResults.forEach(result => {
-        const resultCard = document.createElement('div');
-        resultCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200';
-        resultCard.innerHTML = `
-            <h3 class="text-lg font-semibold text-gray-800">${result.Ujian}</h3>
-            <p class="text-sm text-gray-700 mt-1">Nilai: ${result.Nilai}</p>
-        `;
-        parentExamResultsList.appendChild(resultCard);
-    });
-}
-
-// --- FUNGSI LOGIN DAN TAMPILAN DASHBOARD ---
-document.getElementById('loginForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
+// Fungsi untuk login
+async function handleLogin(event) {
+    event.preventDefault();
     const username = document.getElementById('loginUsername').value;
     const password = document.getElementById('loginPassword').value;
     const loginMessage = document.getElementById('loginMessage');
 
-    const user = users[username];
-    if (user && user.password === password) {
-        loginMessage.classList.add('hidden');
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('username', username);
-        localStorage.setItem('role', user.role);
-        if (user.studentName) {
-            localStorage.setItem('studentName', user.studentName);
+    try {
+        // Ambil data siswa dari Google Sheets
+        studentData = await fetchData('students');
+        
+        // Cek kredensial admin dan guru
+        if (username === 'admin_tahfidz' && password === 'admin123') {
+            document.getElementById('currentUserName').textContent = 'Admin Tahfidz';
+            document.getElementById('adminTeacherDashboard').classList.remove('hidden');
+            document.getElementById('parentDashboard').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('hidden');
+            
+            // Ambil data lainnya
+            journalEntries = await fetchData('journals');
+            examSchedule = await fetchData('exams');
+            examResults = await fetchData('exam_results');
+            
+            // Render semua data
+            renderStudentsTable();
+            updateStudentDropdowns();
+            updateAchievementCounts();
+            renderJournalEntries();
+            renderExamSchedule();
+            renderExamResults();
+            renderRecentActivities();
+            showTab('dashboard');
+            
+        } else if (username === 'guru_tahfidz' && password === 'guru123') {
+            document.getElementById('currentUserName').textContent = 'Guru Tahfidz';
+            document.getElementById('adminTeacherDashboard').classList.remove('hidden');
+            document.getElementById('parentDashboard').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('hidden');
+            
+            // Ambil data lainnya
+            journalEntries = await fetchData('journals');
+            examSchedule = await fetchData('exams');
+            examResults = await fetchData('exam_results');
+            
+            // Render semua data
+            renderStudentsTable();
+            updateStudentDropdowns();
+            updateAchievementCounts();
+            renderJournalEntries();
+            renderExamSchedule();
+            renderExamResults();
+            renderRecentActivities();
+            showTab('dashboard');
+            
+        } else {
+            // Cek kredensial wali murid
+            const child = studentData.find(s => s.waliUsername === username && s.waliPassword === password);
+            if (child) {
+                document.getElementById('currentUserName').textContent = 'Wali Murid';
+                document.getElementById('adminTeacherDashboard').classList.add('hidden');
+                document.getElementById('parentDashboard').classList.remove('hidden');
+                document.getElementById('mainContent').classList.remove('hidden');
+                document.getElementById('loginModal').classList.add('hidden');
+                
+                // Ambil data jurnal untuk anak
+                journalEntries = await fetchData('journals');
+                renderParentDashboard(child.id);
+            } else {
+                loginMessage.textContent = 'Nama pengguna atau kata sandi salah.';
+                loginMessage.classList.remove('hidden');
+            }
         }
-        initApp();
-    } else {
-        loginMessage.textContent = 'Username atau password salah.';
+    } catch (error) {
+        console.error('Login error:', error);
+        loginMessage.textContent = 'Terjadi kesalahan saat login. Silakan coba lagi.';
         loginMessage.classList.remove('hidden');
     }
-});
-
-function logout() {
-    localStorage.clear();
-    location.reload();
-}
-document.getElementById('logoutBtn').addEventListener('click', logout);
-
-async function initApp() {
-    document.getElementById('loginModal').classList.add('hidden');
-    document.getElementById('mainContent').classList.remove('hidden');
-    
-    await fetchDataAndRender();
 }
 
-async function fetchDataAndRender() {
-    const role = localStorage.getItem('role');
-    const username = localStorage.getItem('username');
-    const studentName = localStorage.getItem('studentName');
-
-    document.getElementById('welcomeMessage').textContent = `Selamat datang, ${username}!`;
-
-    // Sembunyikan semua tab
-    document.getElementById('studentsTabBtn').classList.add('hidden');
-    document.getElementById('journalsTabBtn').classList.add('hidden');
-    document.getElementById('examsTabBtn').classList.add('hidden');
-    document.getElementById('examResultsTabBtn').classList.add('hidden');
-    document.getElementById('parentViewBtn').classList.add('hidden');
-
-    if (role === 'admin') {
-        document.getElementById('studentsTabBtn').classList.remove('hidden');
-        document.getElementById('journalsTabBtn').classList.remove('hidden');
-        document.getElementById('examsTabBtn').classList.remove('hidden');
-        document.getElementById('examResultsTabBtn').classList.remove('hidden');
-        await fetchData();
-        renderAdminDashboard();
-        showTab('dashboard');
-    } else if (role === 'parent' && studentName) {
-        document.getElementById('parentViewBtn').classList.remove('hidden');
-        await fetchData();
-        renderParentDashboard(studentName);
-        showTab('parent-view');
-    } else {
-        // Fallback jika role tidak valid
-        showTab('dashboard');
+// Fungsi untuk menampilkan dashboard wali murid
+async function renderParentDashboard(studentId) {
+    const child = studentData.find(s => s.id == studentId);
+    if (!child) {
+        console.error('Student not found with ID:', studentId);
+        return;
     }
-}
 
-// --- FUNGSI TAMPILAN TAB ---
-document.querySelectorAll('.tab-btn').forEach(button => {
-    button.addEventListener('click', function() {
-        const tab = this.dataset.tab;
-        showTab(tab);
-    });
-});
+    document.getElementById('childProgressTitle').textContent = `Progress ${child.name}`;
+    document.getElementById('childKibarAchievement').textContent = child.kibarAchievement || 'N/A';
+    document.getElementById('childTahfidzProgress').textContent = child.tahfidzProgress !== null ? child.tahfidzProgress.toFixed(2) + '%' : 'N/A';
+    document.getElementById('childClass').textContent = `Kelas: ${child.class}`;
 
-function showTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.add('hidden');
-    });
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('text-emerald-600', 'bg-emerald-50', 'font-semibold');
-        btn.classList.add('text-gray-600');
-    });
-    document.getElementById(tabId + '-tab').classList.remove('hidden');
-    document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('text-emerald-600', 'bg-emerald-50', 'font-semibold');
+    const activitiesContainer = document.getElementById('childActivities');
+    activitiesContainer.innerHTML = '';
+    const childJournals = journalEntries.filter(entry => entry.studentId == studentId);
     
-    // Render data untuk tab yang aktif
-    const role = localStorage.getItem('role');
-    if (role === 'admin') {
-        renderAdminDashboard();
-    } else if (role === 'parent') {
-        renderParentDashboard(localStorage.getItem('studentName'));
+    if (childJournals.length === 0) {
+        activitiesContainer.innerHTML = '<p class="text-center text-gray-500">Belum ada jurnal harian.</p>';
+        return;
     }
+
+    childJournals.forEach(entry => {
+        const activityDiv = document.createElement('div');
+        activityDiv.className = 'bg-gray-100 p-4 rounded-lg shadow-sm flex items-start space-x-3 fade-in';
+        activityDiv.innerHTML = `
+            <span class="text-2xl">${entry.status === 'Selesai' ? '✅' : '⏳'}</span>
+            <div>
+                <p class="text-sm font-semibold text-gray-800">${entry.date}</p>
+                <p class="text-sm text-gray-700 mt-1">${entry.notes}</p>
+            </div>
+        `;
+        activitiesContainer.appendChild(activityDiv);
+    });
 }
 
-// --- FUNGSI LAINNYA ---
-// (Fungsi renderStudentsTable, showAddStudentModal, deleteStudent, dll. tetap sama)
-
-// Student functions
-function renderStudentsTable(students) {
-    const tableBody = document.getElementById('studentsTableBody');
+// Fungsi untuk merender tabel siswa
+function renderStudentsTable(filteredStudents = studentData) {
+    const tableBody = document.getElementById('studentsTable');
     tableBody.innerHTML = '';
-    students.forEach((student, index) => {
+
+    if (studentData.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-500">Belum ada data siswa.</td></tr>';
+        return;
+    }
+
+    filteredStudents.forEach((student) => {
+        const tahsinScore = student.tahsinScore ? student.tahsinScore.toFixed(2) : 'N/A';
+        const tahfidzProgress = student.tahfidzProgress ? student.tahfidzProgress.toFixed(2) + '%' : 'N/A';
         const row = document.createElement('tr');
+        row.className = 'bg-white border-b hover:bg-gray-50';
         row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${index + 1}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${student.Nama}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${student.NIS}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${student.Kelas}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button onclick="editStudent(${student.id})" class="text-indigo-600 hover:text-indigo-900 mr-2">Edit</button>
-                <button onclick="deleteStudent(${student.id})" class="text-red-600 hover:text-red-900">Hapus</button>
+            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${student.nis}</td>
+            <td class="px-6 py-4">${student.name}</td>
+            <td class="px-6 py-4">${student.class}</td>
+            <td class="px-6 py-4">${tahsinScore}</td>
+            <td class="px-6 py-4">${student.juzTahfidz || 'N/A'}</td>
+            <td class="px-6 py-4">${student.kibarAchievement || 'N/A'}</td>
+            <td class="px-6 py-4">${tahfidzProgress}</td>
+            <td class="px-6 py-4">${student.status || 'Aktif'}</td>
+            <td class="px-6 py-4 text-right space-x-2">
+                <button onclick="editStudent('${student.id}')" class="font-medium text-blue-600 hover:underline">Edit</button>
+                <button onclick="deleteStudent('${student.id}')" class="font-medium text-red-600 hover:underline">Hapus</button>
             </td>
         `;
         tableBody.appendChild(row);
     });
 }
-        
-function showAddStudentModal(studentId = null) {
-    const modal = document.getElementById('addStudentModal');
-    const form = document.getElementById('studentForm');
-    const title = document.getElementById('studentModalTitle');
-    form.reset();
-            
-    if (studentId) {
-        const student = allStudents.find(s => s.id === studentId);
-        if (student) {
-            title.textContent = 'Edit Santri';
-            document.getElementById('studentId').value = student.id;
-            document.getElementById('studentName').value = student.Nama;
-            document.getElementById('studentNis').value = student.NIS;
-            document.getElementById('studentClass').value = student.Kelas;
-            document.getElementById('studentTahsinScore').value = student.NilaiTahsin;
-            document.getElementById('studentTahfidzProgress').value = student.ProgresTahfidz;
-        }
-    } else {
-        title.textContent = 'Tambah Santri';
-        document.getElementById('studentId').value = '';
+
+// Fungsi untuk mengupdate dropdown siswa
+function updateStudentDropdowns() {
+    const studentSelects = document.querySelectorAll('#journalStudentIdInput, #examStudentIdInput');
+    studentSelects.forEach(select => {
+        select.innerHTML = '<option value="">Pilih Santri</option>';
+        studentData.forEach(student => {
+            const option = document.createElement('option');
+            option.value = student.id;
+            option.textContent = `${student.name} (${student.nis})`;
+            select.appendChild(option);
+        });
+    });
+}
+
+// Fungsi untuk mengupdate statistik pencapaian
+function updateAchievementCounts() {
+    const alQuranCount = studentData.filter(s => s.kibarAchievement === 'Al Quran').length;
+    const kibarACount = studentData.filter(s => s.kibarAchievement === 'Kibar A').length;
+    const kibarBCount = studentData.filter(s => s.kibarAchievement === 'Kibar B').length;
+    const kibarCCount = studentData.filter(s => s.kibarAchievement === 'Kibar C').length;
+    
+    document.getElementById('totalStudents').textContent = studentData.length;
+    document.getElementById('alQuranCount').textContent = alQuranCount;
+    document.getElementById('kibarACount').textContent = kibarACount;
+    document.getElementById('kibarBCount').textContent = kibarBCount;
+    document.getElementById('kibarCCount').textContent = kibarCCount;
+}
+
+// Fungsi untuk menambah data siswa baru
+async function addStudent(event) {
+    event.preventDefault();
+
+    const newStudent = {
+        id: new Date().getTime(),
+        nis: document.getElementById('studentNisInput').value,
+        class: document.getElementById('studentClassInput').value,
+        name: document.getElementById('studentNameInput').value,
+        kibarAchievement: document.getElementById('studentKibarInput').value,
+        juzTahfidz: document.getElementById('studentJuzInput').value,
+        tahsinScore: document.getElementById('studentTahsinScoreInput').value || null,
+        tahfidzProgress: document.getElementById('studentTahfidzProgressInput').value || null,
+        waliUsername: document.getElementById('studentWaliUsername').value,
+        waliPassword: document.getElementById('studentWaliPassword').value,
+        status: 'Aktif'
+    };
+
+    try {
+        await manageData('POST', 'students', newStudent);
+        studentData.push(newStudent);
+        renderStudentsTable();
+        updateStudentDropdowns();
+        updateAchievementCounts();
+        hideAddStudentModal();
+        alert('Siswa berhasil ditambahkan!');
+    } catch (error) {
+        console.error('Error adding student:', error);
+        alert('Gagal menambahkan siswa. Silakan coba lagi.');
     }
-    modal.classList.remove('hidden');
+}
+
+// Fungsi untuk mengedit data siswa
+async function editStudent(studentId) {
+    const student = studentData.find(s => s.id == studentId);
+    if (!student) {
+        alert('Siswa tidak ditemukan!');
+        return;
+    }
+
+    document.getElementById('editStudentId').value = student.id;
+    document.getElementById('editStudentNis').value = student.nis;
+    document.getElementById('editStudentClass').value = student.class;
+    document.getElementById('editStudentName').value = student.name;
+    document.getElementById('editStudentKibar').value = student.kibarAchievement;
+    document.getElementById('editStudentJuz').value = student.juzTahfidz;
+    document.getElementById('editStudentTahsin').value = student.tahsinScore || '';
+    document.getElementById('editStudentTahfidz').value = student.tahfidzProgress || '';
+    
+    showEditStudentModal();
+}
+
+// Fungsi untuk memperbarui data siswa
+async function updateStudent(event) {
+    event.preventDefault();
+    const studentId = document.getElementById('editStudentId').value;
+    const updatedStudent = {
+        id: studentId,
+        nis: document.getElementById('editStudentNis').value,
+        class: document.getElementById('editStudentClass').value,
+        name: document.getElementById('editStudentName').value,
+        kibarAchievement: document.getElementById('editStudentKibar').value,
+        juzTahfidz: document.getElementById('editStudentJuz').value,
+        tahsinScore: document.getElementById('editStudentTahsin').value ? parseFloat(document.getElementById('editStudentTahsin').value) : null,
+        tahfidzProgress: document.getElementById('editStudentTahfidz').value ? parseFloat(document.getElementById('editStudentTahfidz').value) : null
+    };
+
+    try {
+        await manageData('PUT', 'students', updatedStudent, studentId);
+        // Update data lokal
+        const index = studentData.findIndex(s => s.id == studentId);
+        if (index !== -1) {
+            studentData[index] = {...studentData[index], ...updatedStudent};
+        }
+        renderStudentsTable();
+        updateAchievementCounts();
+        hideEditStudentModal();
+        alert('Data siswa berhasil diperbarui!');
+    } catch (error) {
+        console.error('Error updating student:', error);
+        alert('Gagal memperbarui data siswa. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk menghapus data siswa
+async function deleteStudent(studentId) {
+    if (!confirm("Apakah Anda yakin ingin menghapus siswa ini?")) return;
+    try {
+        await manageData('DELETE', 'students', null, studentId);
+        // Hapus dari data lokal
+        studentData = studentData.filter(s => s.id != studentId);
+        renderStudentsTable();
+        updateStudentDropdowns();
+        updateAchievementCounts();
+        alert('Siswa berhasil dihapus!');
+    } catch (error) {
+        console.error('Error deleting student:', error);
+        alert('Gagal menghapus siswa. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk menambah jurnal harian
+async function addJournal(event) {
+    event.preventDefault();
+    const newJournal = {
+        id: new Date().getTime(),
+        studentId: document.getElementById('journalStudentIdInput').value,
+        date: document.getElementById('journalDateInput').value,
+        notes: document.getElementById('journalNotesInput').value,
+        status: 'Selesai' // Default status
+    };
+
+    try {
+        await manageData('POST', 'journals', newJournal);
+        journalEntries.push(newJournal);
+        renderJournalEntries();
+        renderRecentActivities();
+        hideAddJournalModal();
+        alert('Jurnal berhasil ditambahkan!');
+    } catch (error) {
+        console.error('Error adding journal:', error);
+        alert('Gagal menambahkan jurnal. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk menambah jadwal ujian
+async function addExam(event) {
+    event.preventDefault();
+    const newExam = {
+        id: new Date().getTime(),
+        title: document.getElementById('examTitleInput').value,
+        date: document.getElementById('examDateInput').value,
+        time: document.getElementById('examTimeInput').value
+    };
+
+    try {
+        await manageData('POST', 'exams', newExam);
+        examSchedule.push(newExam);
+        renderExamSchedule();
+        renderRecentActivities();
+        hideAddExamModal();
+        alert('Jadwal ujian berhasil ditambahkan!');
+    } catch (error) {
+        console.error('Error adding exam:', error);
+        alert('Gagal menambahkan jadwal ujian. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk menambah hasil ujian
+async function addExamResult(event) {
+    event.preventDefault();
+    const newResult = {
+        id: new Date().getTime(),
+        studentId: document.getElementById('examStudentIdInput').value,
+        examName: document.getElementById('examNameInput').value,
+        score: document.getElementById('examScoreInput').value,
+        notes: document.getElementById('examResultNotesInput').value
+    };
+
+    try {
+        await manageData('POST', 'exam_results', newResult);
+        examResults.push(newResult);
+        renderExamResults();
+        renderRecentActivities();
+        hideAddExamResultModal();
+        alert('Hasil ujian berhasil ditambahkan!');
+    } catch (error) {
+        console.error('Error adding exam result:', error);
+        alert('Gagal menambahkan hasil ujian. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk logout
+function logout() {
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginMessage').classList.add('hidden');
+    document.getElementById('mainContent').classList.add('hidden');
+    document.getElementById('adminTeacherDashboard').classList.add('hidden');
+    document.getElementById('parentDashboard').classList.add('hidden');
+    document.getElementById('loginModal').classList.remove('hidden');
+    
+    // Reset data
+    studentData = [];
+    journalEntries = [];
+    examSchedule = [];
+    examResults = [];
+}
+
+// Fungsi untuk menampilkan tab
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('border-emerald-500', 'text-emerald-600', 'hover:text-emerald-800');
+        btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+    });
+    
+    document.getElementById(`content-${tabId}`).classList.remove('hidden');
+    document.getElementById(`tab-${tabId}`).classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700');
+    document.getElementById(`tab-${tabId}`).classList.add('border-emerald-500', 'text-emerald-600', 'hover:text-emerald-800');
+}
+
+// Fungsi untuk merender entri jurnal
+function renderJournalEntries() {
+    const journalEntriesContainer = document.getElementById('journalEntries');
+    journalEntriesContainer.innerHTML = '';
+    const sortedJournals = journalEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    sortedJournals.forEach(entry => {
+        const student = studentData.find(s => s.id == entry.studentId);
+        const studentName = student ? student.name : 'Santri Tidak Dikenal';
+        const card = document.createElement('div');
+        card.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 fade-in';
+        card.innerHTML = `
+            <p class="text-sm font-medium text-gray-500">Santri: ${studentName}</p>
+            <h3 class="text-xl font-semibold text-gray-800">${entry.date}</h3>
+            <p class="mt-2 text-gray-700">${entry.notes}</p>
+            <div class="flex justify-end mt-4 space-x-2">
+                <button onclick="deleteJournal('${entry.id}')" class="text-red-500 text-sm hover:underline">Hapus</button>
+            </div>
+        `;
+        journalEntriesContainer.appendChild(card);
+    });
+}
+
+// Fungsi untuk menghapus jurnal
+async function deleteJournal(journalId) {
+    if (!confirm("Apakah Anda yakin ingin menghapus jurnal ini?")) return;
+    try {
+        await manageData('DELETE', 'journals', null, journalId);
+        journalEntries = journalEntries.filter(entry => entry.id != journalId);
+        renderJournalEntries();
+        alert('Jurnal berhasil dihapus!');
+    } catch (error) {
+        console.error('Error deleting journal:', error);
+        alert('Gagal menghapus jurnal. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk merender jadwal ujian
+function renderExamSchedule() {
+    const examScheduleContainer = document.getElementById('examSchedule');
+    examScheduleContainer.innerHTML = '';
+    const sortedExams = examSchedule.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    sortedExams.forEach(exam => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 fade-in';
+        card.innerHTML = `
+            <h3 class="text-xl font-semibold text-gray-800">${exam.title}</h3>
+            <p class="text-sm font-medium text-gray-500">${exam.date} at ${exam.time}</p>
+            <div class="flex justify-end mt-4 space-x-2">
+                <button onclick="deleteExam('${exam.id}')" class="text-red-500 text-sm hover:underline">Hapus</button>
+            </div>
+        `;
+        examScheduleContainer.appendChild(card);
+    });
+}
+
+// Fungsi untuk menghapus jadwal ujian
+async function deleteExam(examId) {
+    if (!confirm("Apakah Anda yakin ingin menghapus jadwal ujian ini?")) return;
+    try {
+        await manageData('DELETE', 'exams', null, examId);
+        examSchedule = examSchedule.filter(exam => exam.id != examId);
+        renderExamSchedule();
+        alert('Jadwal ujian berhasil dihapus!');
+    } catch (error) {
+        console.error('Error deleting exam:', error);
+        alert('Gagal menghapus jadwal ujian. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk merender hasil ujian
+function renderExamResults() {
+    const examResultsContainer = document.getElementById('examResults');
+    examResultsContainer.innerHTML = '';
+    const sortedResults = examResults.sort((a, b) => {
+        const studentA = studentData.find(s => s.id == a.studentId);
+        const studentB = studentData.find(s => s.id == b.studentId);
+        const nameA = studentA ? studentA.name : '';
+        const nameB = studentB ? studentB.name : '';
+        return nameA.localeCompare(nameB);
+    });
+    
+    sortedResults.forEach(result => {
+        const student = studentData.find(s => s.id == result.studentId);
+        const studentName = student ? student.name : 'Santri Tidak Dikenal';
+        const card = document.createElement('div');
+        card.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200 fade-in';
+        card.innerHTML = `
+            <p class="text-sm font-medium text-gray-500">Santri: ${studentName}</p>
+            <h3 class="text-xl font-semibold text-gray-800">${result.examName}</h3>
+            <p class="mt-2 text-gray-700">Nilai: ${result.score}</p>
+            <div class="flex justify-end mt-4 space-x-2">
+                <button onclick="deleteExamResult('${result.id}')" class="text-red-500 text-sm hover:underline">Hapus</button>
+            </div>
+        `;
+        examResultsContainer.appendChild(card);
+    });
+}
+
+// Fungsi untuk menghapus hasil ujian
+async function deleteExamResult(resultId) {
+    if (!confirm("Apakah Anda yakin ingin menghapus hasil ujian ini?")) return;
+    try {
+        await manageData('DELETE', 'exam_results', null, resultId);
+        examResults = examResults.filter(result => result.id != resultId);
+        renderExamResults();
+        alert('Hasil ujian berhasil dihapus!');
+    } catch (error) {
+        console.error('Error deleting exam result:', error);
+        alert('Gagal menghapus hasil ujian. Silakan coba lagi.');
+    }
+}
+
+// Fungsi untuk merender aktivitas terbaru
+function renderRecentActivities() {
+    const recentActivitiesContainer = document.getElementById('recentActivities');
+    recentActivitiesContainer.innerHTML = '';
+    const allActivities = [
+        ...journalEntries.map(j => ({ type: 'Jurnal', date: j.date, description: `Jurnal ${j.date}` })),
+        ...examResults.map(r => ({ type: 'Hasil Ujian', date: r.date, description: `Hasil Ujian ${r.examName}` })),
+        ...examSchedule.map(e => ({ type: 'Jadwal Ujian', date: e.date, description: `Jadwal Ujian ${e.title}` }))
+    ];
+
+    const sortedActivities = allActivities.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const recent = sortedActivities.slice(0, 5); // Tampilkan 5 aktivitas terbaru
+
+    if (recent.length === 0) {
+        recentActivitiesContainer.innerHTML = '<div class="text-center text-gray-500 text-sm">Belum ada aktivitas.</div>';
+        return;
+    }
+
+    recent.forEach(activity => {
+        const activityDiv = document.createElement('div');
+        activityDiv.className = 'bg-gray-100 p-2 rounded-md';
+        activityDiv.innerHTML = `
+            <p class="text-sm font-medium">${activity.type}</p>
+            <p class="text-xs text-gray-600">${activity.description}</p>
+        `;
+        recentActivitiesContainer.appendChild(activityDiv);
+    });
+}
+
+// Fungsi modal
+function showAddStudentModal() {
+    document.getElementById('addStudentModal').classList.remove('hidden');
 }
 
 function hideAddStudentModal() {
     document.getElementById('addStudentModal').classList.add('hidden');
 }
 
-document.getElementById('studentForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const studentId = document.getElementById('studentId').value;
-    const newStudent = {
-        Nama: document.getElementById('studentName').value,
-        NIS: document.getElementById('studentNis').value,
-        Kelas: document.getElementById('studentClass').value,
-        NilaiTahsin: document.getElementById('studentTahsinScore').value,
-        ProgresTahfidz: document.getElementById('studentTahfidzProgress').value
-    };
-            
-    let response;
-    if (studentId) {
-        // Update Student
-        response = await manageData('PUT', sheets.students, newStudent, studentId);
-    } else {
-        // Add New Student
-        response = await manageData('POST', sheets.students, newStudent);
-    }
-
-    if (response.status === 'success') {
-        hideAddStudentModal();
-        await fetchDataAndRender();
-    } else {
-        alert('Gagal menyimpan data: ' + response.message);
-    }
-});
-
-async function deleteStudent(studentId) {
-    if (confirm('Apakah Anda yakin ingin menghapus santri ini?')) {
-        const response = await manageData('DELETE', sheets.students, {}, studentId);
-        if (response.status === 'success') {
-            await fetchDataAndRender();
-        } else {
-            alert('Gagal menghapus data: ' + response.message);
-        }
-    }
-}
-
-document.getElementById('studentSearchInput').addEventListener('keyup', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredStudents = allStudents.filter(student => 
-        student.Nama.toLowerCase().includes(searchTerm) || 
-        student.NIS.toString().includes(searchTerm)
-    );
-    renderStudentsTable(filteredStudents);
-});
-
-// Journal functions
-function renderJournalsList() {
-    const journalsList = document.getElementById('journalsList');
-    journalsList.innerHTML = '';
-            
-    const sortedJournals = allJournals.sort((a, b) => new Date(b.Tanggal) - new Date(a.Tanggal));
-
-    sortedJournals.forEach(journal => {
-        const journalCard = document.createElement('div');
-        journalCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200';
-        journalCard.innerHTML = `
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Santri: ${journal.NamaSantri}</p>
-                    <h3 class="text-xl font-semibold text-gray-800">${journal.Tanggal}</h3>
-                </div>
-            </div>
-            <p class="mt-2 text-gray-700">${journal.Aktivitas}</p>
-            <div class="flex justify-end mt-4 space-x-2">
-                <button onclick="deleteJournal(${journal.id})" class="text-red-500 text-sm hover:underline">Hapus</button>
-            </div>
-        `;
-        journalsList.appendChild(journalCard);
-    });
-}
-        
 function showAddJournalModal() {
     updateStudentDropdowns();
     document.getElementById('addJournalModal').classList.remove('hidden');
@@ -347,59 +590,6 @@ function hideAddJournalModal() {
     document.getElementById('addJournalModal').querySelector('form').reset();
 }
 
-document.getElementById('journalForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const newJournal = {
-        NamaSantri: document.getElementById('journalStudentName').value,
-        Tanggal: document.getElementById('journalDate').value,
-        Aktivitas: document.getElementById('journalActivities').value
-    };
-            
-    const response = await manageData('POST', sheets.journals, newJournal);
-    if (response.status === 'success') {
-        hideAddJournalModal();
-        await fetchDataAndRender();
-    } else {
-        alert('Gagal menambahkan jurnal: ' + response.message);
-    }
-});
-
-async function deleteJournal(journalId) {
-    if (confirm('Apakah Anda yakin ingin menghapus jurnal ini?')) {
-        const response = await manageData('DELETE', sheets.journals, {}, journalId);
-        if (response.status === 'success') {
-            await fetchDataAndRender();
-        } else {
-            alert('Gagal menghapus jurnal: ' + response.message);
-        }
-    }
-}
-
-// Exam functions
-function renderExamsList() {
-    const examsList = document.getElementById('examsList');
-    examsList.innerHTML = '';
-            
-    const sortedExams = allExams.sort((a, b) => new Date(a.Tanggal) - new Date(b.Tanggal));
-
-    sortedExams.forEach(exam => {
-        const examCard = document.createElement('div');
-        examCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200';
-        examCard.innerHTML = `
-            <div class="flex justify-between items-start">
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-800">${exam.Judul}</h3>
-                    <p class="text-sm font-medium text-gray-500">${exam.Tanggal} at ${exam.Waktu}</p>
-                </div>
-            </div>
-            <div class="flex justify-end mt-4 space-x-2">
-                <button onclick="deleteExam(${exam.id})" class="text-red-500 text-sm hover:underline">Hapus</button>
-            </div>
-        `;
-        examsList.appendChild(examCard);
-    });
-}
-        
 function showAddExamModal() {
     document.getElementById('addExamModal').classList.remove('hidden');
 }
@@ -409,127 +599,63 @@ function hideAddExamModal() {
     document.getElementById('addExamModal').querySelector('form').reset();
 }
 
-document.getElementById('examForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const newExam = {
-        Judul: document.getElementById('examTitle').value,
-        Tanggal: document.getElementById('examDate').value,
-        Waktu: document.getElementById('examTime').value
-    };
-            
-    const response = await manageData('POST', sheets.exams, newExam);
-    if (response.status === 'success') {
-        hideAddExamModal();
-        await fetchDataAndRender();
-    } else {
-        alert('Gagal menambahkan jadwal ujian: ' + response.message);
-    }
-});
-
-async function deleteExam(examId) {
-    if (confirm('Apakah Anda yakin ingin menghapus jadwal ujian ini?')) {
-        const response = await manageData('DELETE', sheets.exams, {}, examId);
-        if (response.status === 'success') {
-            await fetchDataAndRender();
-        } else {
-            alert('Gagal menghapus jadwal ujian: ' + response.message);
-        }
-    }
-}
-        
-// Exam Results functions
-function renderExamResultsList() {
-    const examResultsList = document.getElementById('examResultsList');
-    examResultsList.innerHTML = '';
-            
-    const sortedResults = allExamResults.sort((a, b) => {
-        const dateA = allJournals.find(j => j.NamaSantri === a.NamaSantri)?.Tanggal || '0';
-        const dateB = allJournals.find(j => j.NamaSantri === b.NamaSantri)?.Tanggal || '0';
-        return new Date(dateB) - new Date(dateA);
-    });
-
-    sortedResults.forEach(result => {
-        const resultCard = document.createElement('div');
-        resultCard.className = 'bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200';
-        resultCard.innerHTML = `
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="text-sm font-medium text-gray-500">Santri: ${result.NamaSantri}</p>
-                    <h3 class="text-xl font-semibold text-gray-800">${result.Ujian}</h3>
-                </div>
-            </div>
-            <p class="mt-2 text-gray-700">Nilai: ${result.Nilai}</p>
-            <div class="flex justify-end mt-4 space-x-2">
-                <button onclick="deleteExamResult(${result.id})" class="text-red-500 text-sm hover:underline">Hapus</button>
-            </div>
-        `;
-        examResultsList.appendChild(resultCard);
-    });
-}
-        
 function showAddExamResultModal() {
     updateStudentDropdowns();
     document.getElementById('addExamResultModal').classList.remove('hidden');
 }
-        
+
 function hideAddExamResultModal() {
     document.getElementById('addExamResultModal').classList.add('hidden');
     document.getElementById('addExamResultModal').querySelector('form').reset();
 }
 
-document.getElementById('examResultForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const newResult = {
-        NamaSantri: document.getElementById('examResultStudentName').value,
-        Ujian: document.getElementById('examName').value,
-        Nilai: document.getElementById('examScore').value
-    };
-            
-    const response = await manageData('POST', sheets.examResults, newResult);
-    if (response.status === 'success') {
-        hideAddExamResultModal();
-        await fetchDataAndRender();
-    } else {
-        alert('Gagal menambahkan hasil ujian: ' + response.message);
-    }
-});
+// Event listener
+document.getElementById('loginForm').addEventListener('submit', handleLogin);
+document.getElementById('logoutButton').addEventListener('click', logout);
+document.getElementById('studentForm').addEventListener('submit', addStudent);
+document.getElementById('editStudentForm').addEventListener('submit', updateStudent);
+document.getElementById('journalForm').addEventListener('submit', addJournal);
+document.getElementById('examForm').addEventListener('submit', addExam);
+document.getElementById('examResultForm').addEventListener('submit', addExamResult);
+document.getElementById('studentSearchInput').addEventListener('keyup', filterStudents);
+document.getElementById('classFilter').addEventListener('change', filterStudents);
 
-async function deleteExamResult(resultId) {
-    if (confirm('Apakah Anda yakin ingin menghapus hasil ujian ini?')) {
-        const response = await manageData('DELETE', sheets.examResults, {}, resultId);
-        if (response.status === 'success') {
-            await fetchDataAndRender();
-        } else {
-            alert('Gagal menghapus hasil ujian: ' + response.message);
-        }
-    }
+// Inisialisasi
+function initApp() {
+    document.getElementById('mainContent').classList.remove('hidden');
+    document.getElementById('loginModal').classList.add('hidden');
+    fetchDataAndRender();
 }
 
-// Helper function
-function updateStudentDropdowns() {
-    const studentDropdowns = [
-        document.getElementById('journalStudentName'), 
-        document.getElementById('examResultStudentName')
-    ];
+async function fetchDataAndRender() {
+    studentData = await fetchData('students');
+    journalEntries = await fetchData('journals');
+    examSchedule = await fetchData('exams');
+    examResults = await fetchData('exam_results');
     
-    studentDropdowns.forEach(dropdown => {
-        dropdown.innerHTML = '';
-        allStudents.forEach(student => {
-            const option = document.createElement('option');
-            option.value = student.Nama;
-            option.textContent = student.Nama;
-            dropdown.appendChild(option);
-        });
-    });
+    renderStudentsTable();
+    updateStudentDropdowns();
+    updateAchievementCounts();
+    renderJournalEntries();
+    renderExamSchedule();
+    renderExamResults();
+    renderRecentActivities();
+    showTab('dashboard');
 }
 
-// Inisialisasi aplikasi saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    if (isLoggedIn === 'true') {
-        initApp();
-    } else {
-        document.getElementById('loginModal').classList.remove('hidden');
-        document.getElementById('mainContent').classList.add('hidden');
-    }
+function filterStudents() {
+    const searchTerm = document.getElementById('studentSearchInput').value.toLowerCase();
+    const classFilter = document.getElementById('classFilter').value;
+    const filtered = studentData.filter(student => {
+        const matchesSearch = student.name.toLowerCase().includes(searchTerm) || student.nis.toLowerCase().includes(searchTerm);
+        const matchesClass = classFilter ? student.class === classFilter : true;
+        return matchesSearch && matchesClass;
+    });
+    renderStudentsTable(filtered);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Di sini, Anda bisa menambahkan logika untuk mengecek apakah user sudah login atau belum,
+    // tapi untuk saat ini, kita akan langsung menampilkan modal login.
+    document.getElementById('loginModal').classList.remove('hidden');
 });
