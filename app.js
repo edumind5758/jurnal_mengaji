@@ -1,5 +1,4 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyoQwUDcUKVosWH1ZBNZhCfgx4WoNbvZmvMGzEvEjITyW3E2hkyQDd4P9ynjpnG9KHm/exec';
-
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhA_cxbHt7zW4L3q6ODqiiYbb2rkdeU5j15GmUGTsmUrfecDklCX5hDw_N8crPUHco/exec';
 // Fungsi untuk mengambil data dari Google Sheet
 async function fetchData(sheetName) {
     const url = `${SCRIPT_URL}?sheet=${sheetName}`;
