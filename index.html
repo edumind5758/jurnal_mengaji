@@ -21,237 +21,320 @@
     <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center fade-in">
         <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="w-16 h-16 bg-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span class="text-white text-3xl font-bold">📚</span>
+                <div class="w-16 h-16 rounded-full bg-orange-200 flex items-center justify-center mx-auto mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-orange-600">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900">Jurnal Mengaji</h2>
-                <p class="text-gray-500 mt-1">Masuk untuk melanjutkan</p>
+                <h2 class="text-2xl font-bold text-gray-800">Login</h2>
+                <p class="text-gray-500 text-sm mt-1">Masuk untuk melanjutkan ke dashboard.</p>
             </div>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label for="loginUsername" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                    <input type="text" id="loginUsername" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2" required>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="loginUsername" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="loginUsername" name="username" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="Masukkan username" required>
                 </div>
-                <div>
-                    <label for="loginPassword" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
-                    <input type="password" id="loginPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm p-2" required>
+                <div class="mb-4">
+                    <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="loginPassword" name="password" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="Masukkan password" required>
                 </div>
-                <div>
-                    <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                        Masuk
-                    </button>
-                </div>
+                <div id="loginMessage" class="text-red-500 text-sm text-center mb-4 hidden"></div>
+                <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors shadow-lg">Login</button>
             </form>
-            <p id="loginMessage" class="mt-4 text-center text-red-600 hidden"></p>
         </div>
     </div>
 
-    <div id="mainContent" class="hidden container mx-auto p-4 md:p-8">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-8" id="mainHeader">
-            <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                <div class="w-12 h-12 bg-emerald-600 rounded-full flex items-center justify-center">
-                    <span class="text-white text-xl font-bold">📚</span>
-                </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Jurnal Mengaji</h1>
-                    <p class="text-gray-600">Selamat datang, <span id="currentUserName" class="font-semibold"></span>!</p>
+    <div id="mainContent" class="hidden">
+
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 id="pageTitle" class="text-2xl font-bold text-gray-900">Dashboard Admin Tahfidz</h1>
+                <div class="flex items-center space-x-4">
+                    <span id="welcomeMessage" class="text-sm text-gray-600 font-medium">Selamat Datang, Admin!</span>
+                    <button onclick="logout()" class="flex items-center text-red-500 hover:text-red-700 text-sm font-medium transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Logout
+                    </button>
                 </div>
             </div>
-            <button id="logoutButton" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-md shadow-sm transition-colors duration-200" onclick="logout()">
-                Keluar
-            </button>
         </header>
 
-        <div id="adminTeacherDashboard" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" id="dashboardStats">
-                <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Total Santri</h3>
-                    <p id="totalStudents" class="text-4xl font-bold text-emerald-600 mt-2">0</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Pencapaian Al-Qur'an</h3>
-                    <p id="alQuranCount" class="text-4xl font-bold text-emerald-600 mt-2">0</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <h3 class="text-lg font-semibold text-gray-700">Pencapaian Kibar</h3>
-                    <div class="flex justify-around items-center mt-2 text-sm">
-                        <div>
-                            <span id="kibarACount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar A</p>
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <div id="adminTeacherDashboard" class="hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-md p-6 flex items-center space-x-4">
+                        <div class="bg-teal-100 rounded-full p-3 text-teal-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m0 0l-4.5-4.5M12 19.5l4.5-4.5M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
                         </div>
                         <div>
-                            <span id="kibarBCount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar B</p>
+                            <p class="text-sm text-gray-500">Total Santri</p>
+                            <p id="totalStudents" class="text-2xl font-bold text-gray-900 mt-1">...</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 flex items-center space-x-4">
+                        <div class="bg-orange-100 rounded-full p-3 text-orange-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
                         </div>
                         <div>
-                            <span id="kibarCCount" class="font-bold text-xl text-blue-500">0</span>
-                            <p class="text-gray-600">Kibar C</p>
+                            <p class="text-sm text-gray-500">Total Jurnal</p>
+                            <p id="totalJournals" class="text-2xl font-bold text-gray-900 mt-1">...</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 flex items-center space-x-4">
+                        <div class="bg-blue-100 rounded-full p-3 text-blue-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Total Ujian</p>
+                            <p id="totalExams" class="text-2xl font-bold text-gray-900 mt-1">...</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md p-6 flex items-center space-x-4">
+                        <div class="bg-purple-100 rounded-full p-3 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0h6m-3 0a2 2 0 002 2h1a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Pencapaian Al-Quran</p>
+                            <p id="totalAlQuran" class="text-2xl font-bold text-gray-900 mt-1">...</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Aktivitas Terkini</h3>
-                    <div id="recentActivities" class="space-y-2"></div>
-                </div>
-            </div>
 
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="border-b border-gray-200 mb-6">
-                    <nav class="-mb-px flex space-x-8" aria-label="Tabs">
-                        <button id="tab-dashboard" onclick="showTab('dashboard')" class="tab-button border-b-2 border-emerald-500 py-2 px-1 text-sm font-medium text-emerald-600 hover:text-emerald-800 transition-colors duration-200">Dashboard</button>
-                        <button id="tab-students" onclick="showTab('students')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Daftar Santri</button>
-                        <button id="tab-journal" onclick="showTab('journal')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Jurnal Harian</button>
-                        <button id="tab-exams" onclick="showTab('exams')" class="tab-button border-b-2 border-transparent py-2 px-1 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors duration-200">Ujian & Pencapaian</button>
-                    </nav>
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Aksi Cepat</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        <button onclick="showAddStudentModal()" class="flex flex-col items-center justify-center p-4 rounded-xl bg-orange-50 hover:bg-orange-100 transition-colors text-orange-600 border border-orange-200 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span class="text-sm font-medium text-center">Tambah Santri Baru</span>
+                        </button>
+                        <button onclick="showAddJournalModal()" class="flex flex-col items-center justify-center p-4 rounded-xl bg-teal-50 hover:bg-teal-100 transition-colors text-teal-600 border border-teal-200 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="8" y1="13" x2="16" y2="13"></line>
+                                <line x1="8" y1="17" x2="16" y2="17"></line>
+                            </svg>
+                            <span class="text-sm font-medium text-center">Tambah Jurnal</span>
+                        </button>
+                        <button onclick="showAddExamModal()" class="flex flex-col items-center justify-center p-4 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors text-blue-600 border border-blue-200 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                <line x1="12" y1="11" x2="12" y2="17"></line>
+                                <line x1="9" y1="14" x2="15" y2="14"></line>
+                            </svg>
+                            <span class="text-sm font-medium text-center">Tambah Jadwal Ujian</span>
+                        </button>
+                        <button onclick="showAddExamResultModal()" class="flex flex-col items-center justify-center p-4 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors text-purple-600 border border-purple-200 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <line x1="10" y1="9" x2="10" y2="9"></line>
+                            </svg>
+                            <span class="text-sm font-medium text-center">Input Hasil Ujian</span>
+                        </button>
+                    </div>
                 </div>
-            
-                <div id="tabContent">
-                    <div id="content-dashboard" class="tab-content fade-in">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-lg shadow">
-                                <h3 class="text-xl font-bold mb-4 text-gray-900">Aksi Cepat</h3>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <button onclick="showAddStudentModal()" class="flex flex-col items-center justify-center p-4 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">➕</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Tambah Santri</span>
-                                    </button>
-                                    <button onclick="showAddJournalModal()" class="flex flex-col items-center justify-center p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">📝</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Buat Jurnal</span>
-                                    </button>
-                                    <button onclick="showAddExamModal()" class="flex flex-col items-center justify-center p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">🗓️</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Jadwalkan Ujian</span>
-                                    </button>
-                                    <button onclick="showAddExamResultModal()" class="flex flex-col items-center justify-center p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors">
-                                        <span class="text-3xl mb-2">🏆</span>
-                                        <span class="text-sm font-medium text-gray-800 text-center">Input Hasil Ujian</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="bg-white p-6 rounded-lg shadow">
-                                <h3 class="text-xl font-bold mb-4 text-gray-900">Aktivitas Terkini</h3>
-                                <div id="dashboardRecentActivities" class="space-y-3">
-                                    <div class="text-center text-gray-500 text-sm">Belum ada aktivitas.</div>
-                                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Aktivitas Terkini</h3>
+                    <div id="latestJournal" class="space-y-4">
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mt-1 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            <div>
+                                <p class="text-gray-800">Tidak ada aktivitas jurnal terkini.</p>
+                                <p class="text-sm text-gray-500 mt-1"></p>
                             </div>
                         </div>
                     </div>
-            
-                    <div id="content-students" class="tab-content hidden fade-in">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Daftar Santri</h2>
-                        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 mb-4 items-center">
-                            <input type="text" id="studentSearchInput" oninput="filterStudents()" placeholder="Cari nama santri..." class="w-full md:w-1/3 p-2 border rounded-md shadow-sm focus:ring-emerald-500 focus:border-emerald-500">
-                            <select id="classFilter" onchange="filterStudents()" class="w-full md:w-auto p-2 border rounded-md shadow-sm">
-                                <option value="">Semua Kelas</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                            </select>
-                            <button onclick="showAddStudentModal()" class="w-full md:w-auto py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-2"></i> Tambah Santri
-                            </button>
+                </div>
+
+                <div class="flex space-x-4 mb-4">
+                    <button onclick="showSection('students')" class="flex-1 bg-white text-gray-800 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-shadow">Daftar Santri</button>
+                    <button onclick="showSection('journals')" class="flex-1 bg-white text-gray-800 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-shadow">Jurnal Harian</button>
+                    <button onclick="showSection('exams')" class="flex-1 bg-white text-gray-800 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-shadow">Jadwal Ujian</button>
+                    <button onclick="showSection('exam-results')" class="flex-1 bg-white text-gray-800 py-3 rounded-lg font-semibold shadow-sm hover:shadow-md transition-shadow">Hasil Ujian</button>
+                </div>
+
+                <div id="studentsSection" class="section">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Daftar Santri</h3>
+                        <div class="mb-4">
+                            <input type="text" id="searchStudentInput" placeholder="Cari santri berdasarkan nama atau NIS..." class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500">
                         </div>
-                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
-                            <table class="w-full text-sm text-left text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">NIS</th>
-                                        <th scope="col" class="px-6 py-3">Nama Santri</th>
-                                        <th scope="col" class="px-6 py-3">Kelas</th>
-                                        <th scope="col" class="px-6 py-3">Nilai Tahsin</th>
-                                        <th scope="col" class="px-6 py-3">Juz Tahfidz</th>
-                                        <th scope="col" class="px-6 py-3">Capaian Kibar</th>
-                                        <th scope="col" class="px-6 py-3">Progress Tahfidz</th>
-                                        <th scope="col" class="px-6 py-3">Status</th>
-                                        <th scope="col" class="px-6 py-3 text-right">Aksi</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Santri</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capaian</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody id="studentsTable">
+                                <tbody id="studentsTableBody" class="bg-white divide-y divide-gray-200">
                                     </tbody>
                             </table>
                         </div>
                     </div>
-            
-                    <div id="content-journal" class="tab-content hidden fade-in">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-xl font-bold text-gray-900">Jurnal Harian</h2>
-                            <button onclick="showAddJournalModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-2"></i> Tambah Jurnal
-                            </button>
-                        </div>
-                        <div id="journalEntries" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            </div>
-                    </div>
-            
-                    <div id="content-exams" class="tab-content hidden fade-in">
-                        <div class="mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-gray-900">Jadwal Ujian</h2>
-                                <button onclick="showAddExamModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700">
-                                    <i class="fas fa-plus mr-2"></i> Tambah Jadwal
-                                </button>
-                            </div>
-                            <div id="examSchedule" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
-                        </div>
-                        <div class="mb-8">
-                            <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-xl font-bold text-gray-900">Hasil Ujian</h2>
-                                <button onclick="showAddExamResultModal()" class="py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700">
-                                    <i class="fas fa-plus mr-2"></i> Tambah Hasil
-                                </button>
-                            </div>
-                            <div id="examResults" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
-                        </div>
-                        <div class="mb-8">
-                            <h2 class="text-xl font-bold text-gray-900 mb-4">Pencapaian</h2>
-                            <div id="alQuranAchievements" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                                </div>
-                            <div id="kibarAchievements" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                </div>
+                </div>
+
+                <div id="journalsSection" class="section hidden">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Jurnal Harian</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Santri</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Juz Tahfidz</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="journalsTableBody" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-     <div id="parentDashboard" class="hidden">
-    <h2 id="childProgressTitle" class="text-2xl font-bold text-gray-900 mb-6">Progress Anak Anda</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 text-center">
-            <h3 class="text-lg font-semibold text-gray-700">Capaian Kibar/Al Quran</h3>
-            <p id="childKibarAchievement" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6 text-center">
-            <h3 class="text-lg font-semibold text-gray-700">Progress Tahfidz</h3>
-            <p id="childTahfidzProgress" class="text-2xl font-bold text-emerald-600 mt-2">N/A</p>
-            <p id="childClass" class="text-gray-500 mt-1">Kelas: N/A</p>
-        </div>
+                <div id="examsSection" class="section hidden">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Jadwal Ujian</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ujian</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="examsTableBody" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="exam-resultsSection" class="section hidden">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">Hasil Ujian</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Santri</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ujian</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catatan</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="examResultsTableBody" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="parentDashboard" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Profil Santri</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-500">NIS</span>
+                            <span id="parentNis" class="text-lg font-semibold text-gray-800"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-500">Nama Santri</span>
+                            <span id="parentStudentName" class="text-lg font-semibold text-gray-800"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-500">Kelas</span>
+                            <span id="parentStudentClass" class="text-lg font-semibold text-gray-800"></span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-500">Capaian Kibar/Al Quran</span>
+                            <span id="parentKibarAchievement" class="text-lg font-semibold text-gray-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Progress Tahfidz</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-teal-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Terakhir Mengaji</p>
+                            <p id="parentLastMengaji" class="text-lg font-semibold text-teal-800 mt-1"></p>
+                        </div>
+                        <div class="bg-orange-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Juz Saat Ini</p>
+                            <p id="parentJuz" class="text-lg font-semibold text-orange-800 mt-1"></p>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Tahsin Score</p>
+                            <p id="parentTahsinScore" class="text-lg font-semibold text-blue-800 mt-1"></p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Tahfidz Progress</p>
+                            <p id="parentTahfidzProgress" class="text-lg font-semibold text-purple-800 mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Aktivitas Mengaji</h3>
+                    <div id="parentJournalEntries" class="space-y-4">
+                        </div>
+                </div>
+            </div>
+
+        </main>
+
     </div>
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-xl font-bold text-gray-900 mb-4">Aktivitas Mengaji</h3>
-        <div id="childActivities" class="space-y-4">
-        </div>
-    </div>
-</div>
-    <div id="addStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Tambah Santri Baru</h3>
-            <form id="studentForm" onsubmit="addStudent(event)">
-                <div class="space-y-3">
+
+    <div id="addStudentModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Tambah Santri Baru</h3>
+            <form id="addStudentForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
-                        <input type="text" id="studentNameInput" placeholder="Nama Santri" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="studentNameInput" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <input type="text" id="studentNameInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">NIS</label>
-                        <input type="text" id="studentNisInput" placeholder="Nomor Induk Santri" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="nisInput" class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
+                        <input type="text" id="nisInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-xs font-medium text-gray-700 mb-1">Kelas</label>
-                        <select id="studentClassInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="classInput" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                        <select id="classInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                             <option value="">Pilih Kelas</option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -259,252 +342,171 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
-                        <select id="studentKibarInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="kibarAchievementInput" class="block text-sm font-medium text-gray-700 mb-1">Capaian Kibar</label>
+                        <select id="kibarAchievementInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                            <option value="">Pilih Capaian</option>
+                            <option value="Al Quran">Al Quran</option>
                             <option value="Kibar A">Kibar A</option>
                             <option value="Kibar B">Kibar B</option>
                             <option value="Kibar C">Kibar C</option>
-                            <option value="Al Quran">Al Quran</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
-                        <select id="studentJuzInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                        </select>
+                        <label for="juzInput" class="block text-sm font-medium text-gray-700 mb-1">Juz Tahfidz</label>
+                        <input type="number" id="juzInput" min="1" max="30" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Username Wali</label>
-                        <input type="text" id="studentWaliUsername" placeholder="Username untuk wali murid" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="waliUsernameInput" class="block text-sm font-medium text-gray-700 mb-1">Username Wali</label>
+                        <input type="text" id="waliUsernameInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Password Wali</label>
-                        <input type="password" id="studentWaliPassword" placeholder="Password untuk wali murid" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="waliPasswordInput" class="block text-sm font-medium text-gray-700 mb-1">Password Wali</label>
+                        <input type="password" id="waliPasswordInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Santri
-                    </button>
-                    <button type="button" onclick="hideAddStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="flex space-x-2 mt-6">
+                    <button type="submit" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded text-sm font-medium">Simpan Santri</button>
+                    <button type="button" onclick="hideAddStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 rounded text-sm font-medium">Batal</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="editStudentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Edit Data Siswa</h3>
-            <form onsubmit="updateStudent(event)">
+    <div id="editStudentModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Edit Data Santri</h3>
+            <form id="editStudentForm">
                 <input type="hidden" id="editStudentId">
-                <div class="space-y-3">
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">NIS</label>
-                            <input type="text" id="editStudentNis" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Kelas</label>
-                            <select id="editStudentClass" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="Al Quran">Al Quran</option>
-                            </select>
-                        </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="editStudentName" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <input type="text" id="editStudentName" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
-                        <input type="text" id="editStudentName" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="editNis" class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
+                        <input type="text" id="editNis" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
-                        <select id="editStudentKibar" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                        <label for="editClass" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                        <select id="editClass" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="editKibarAchievement" class="block text-sm font-medium text-gray-700 mb-1">Capaian Kibar</label>
+                        <select id="editKibarAchievement" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                            <option value="Al Quran">Al Quran</option>
                             <option value="Kibar A">Kibar A</option>
                             <option value="Kibar B">Kibar B</option>
                             <option value="Kibar C">Kibar C</option>
-                            <option value="Al Quran">Al Quran</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
-                        <select id="editStudentJuz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                        </select>
+                        <label for="editJuz" class="block text-sm font-medium text-gray-700 mb-1">Juz Tahfidz</label>
+                        <input type="number" id="editJuz" min="1" max="30" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahsin</label>
-                            <input type="number" id="editStudentTahsin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Progress Tahfidz (%)</label>
-                            <input type="number" id="editStudentTahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
-                        </div>
+                    <div>
+                        <label for="editWaliUsername" class="block text-sm font-medium text-gray-700 mb-1">Username Wali</label>
+                        <input type="text" id="editWaliUsername" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    <div>
+                        <label for="editWaliPassword" class="block text-sm font-medium text-gray-700 mb-1">Password Wali</label>
+                        <input type="password" id="editWaliPassword" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Perbarui Data
-                    </button>
-                    <button type="button" onclick="hideEditStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <div id="addJournalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Tambah Jurnal Harian</h3>
-            <form onsubmit="addJournal(event)">
-                <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal</label>
-                        <input type="date" id="journalDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
-                        <select id="journalStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="">Pilih Santri</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan Mengaji</label>
-                        <textarea id="journalNotesInput" rows="3" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
-                        <select id="journalStatusInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                            <option value="Selesai">Selesai</option>
-                            <option value="Belum Selesai">Belum Selesai</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Jurnal
-                    </button>
-                    <button type="button" onclick="hideAddJournalModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="flex space-x-2 mt-6">
+                    <button type="submit" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded text-sm font-medium">Simpan Perubahan</button>
+                    <button type="button" onclick="hideEditStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 rounded text-sm font-medium">Batal</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="addExamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Jadwalkan Ujian</h3>
-            <form onsubmit="addExamSchedule(event)">
-                <div class="space-y-3">
+    <div id="addJournalModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Tambah Jurnal Harian</h3>
+            <form id="addJournalForm">
+                <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Ujian</label>
-                        <input type="date" id="examDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
+                        <label for="journalDateInput" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                        <input type="date" id="journalDateInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-teal-500 focus:border-teal-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
-                        <input type="text" id="examSubjectInput" placeholder="Tahsin, Tahfidz Juz 30, dll." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
+                        <label for="journalStudentInput" class="block text-sm font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <select id="journalStudentInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-teal-500 focus:border-teal-500" required>
+                            <option value="">Pilih Santri</option>
+                            </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Deskripsi Tambahan</label>
-                        <textarea id="examDescriptionInput" rows="3" placeholder="Misal: Ujian hafalan surat An-Naba" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500"></textarea>
+                        <label for="journalJuzInput" class="block text-sm font-medium text-gray-700 mb-1">Juz Tahfidz</label>
+                        <input type="number" id="journalJuzInput" min="1" max="30" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-teal-500 focus:border-teal-500" required>
+                    </div>
+                    <div>
+                        <label for="journalNotesInput" class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
+                        <textarea id="journalNotesInput" rows="3" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-teal-500 focus:border-teal-500" placeholder="Contoh: Setoran hafalan, murojaah, dll." required></textarea>
                     </div>
                 </div>
-                <div class="flex space-x-2 mt-4">
-                    <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-sm font-medium">
-                        Jadwalkan
-                    </button>
-                    <button type="button" onclick="hideAddExamModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
-                        Batal
-                    </button>
+                <div class="flex space-x-2 mt-6">
+                    <button type="submit" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded text-sm font-medium">Simpan Jurnal</button>
+                    <button type="button" onclick="hideAddJournalModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 rounded text-sm font-medium">Batal</button>
                 </div>
             </form>
         </div>
     </div>
-    
-    <div id="addExamResultModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
-        <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Input Hasil Ujian</h3>
-            <form onsubmit="addExamResult(event)">
-                <div class="space-y-3">
+
+    <div id="addExamModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Tambah Jadwal Ujian</h3>
+            <form id="addExamForm">
+                <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
-                        <select id="examStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                        <label for="examDateInput" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Ujian</label>
+                        <input type="date" id="examDateInput" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="examNameInput" class="block text-sm font-medium text-gray-700 mb-1">Nama Ujian</label>
+                        <input type="text" id="examNameInput" placeholder="Contoh: Ujian Kenaikan Juz 10" class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="examNotesInput" class="block text-sm font-medium text-gray-700 mb-1">Keterangan</label>
+                        <textarea id="examNotesInput" rows="3" placeholder="Catatan tambahan..." class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+                <div class="flex space-x-2 mt-6">
+                    <button type="submit" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded text-sm font-medium">Simpan Jadwal</button>
+                    <button type="button" onclick="hideAddExamModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2.5 rounded text-sm font-medium">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addExamResultModal" class="modal fixed inset-0 z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white rounded-xl p-8 max-w-lg w-full mx-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Input Hasil Ujian</h3>
+            <form id="addExamResultForm">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                        <input type="date" id="examResultDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <select id="examResultStudentInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                             <option value="">Pilih Santri</option>
-                        </select>
+                            </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
-                        <input type="text" id="examResultSubjectInput" placeholder="Materi Ujian" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Ujian</label>
+                        <input type="text" id="examResultNameInput" placeholder="Contoh: Ujian Kenaikan Juz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nilai</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nilai</label>
                         <input type="number" id="examScoreInput" placeholder="Contoh: 85.5" step="0.01" min="0" max="100" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
                         <textarea id="examResultNotesInput" rows="3" placeholder="Catatan tambahan..." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500"></textarea>
                     </div>
                 </div>
@@ -520,7 +522,7 @@
         </div>
     </div>
     
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <script src="app.js"></script>
-    </body>
+    <script src="app (1).js"></script>
+
+</body>
 </html>
