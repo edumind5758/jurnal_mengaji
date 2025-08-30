@@ -909,7 +909,7 @@
             document.getElementById('addExamResultModal').classList.add('hidden');
             document.getElementById('addExamResultModal').querySelector('form').reset();
         }
-        
+
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('loginUsername').value;
@@ -917,8 +917,8 @@
             const loginMessage = document.getElementById('loginMessage');
 
             // Cek kredensial admin dan guru yang sudah ada
-            if (username === 'admin' && password === 'admin123') {
-                document.getElementById('currentUserName').textContent = 'Admin';
+            if (username === 'admin_tahfidz' && password === 'admin123') {
+                document.getElementById('currentUserName').textContent = 'Admin Tahfidz';
                 document.getElementById('adminTeacherDashboard').classList.remove('hidden');
                 document.getElementById('parentDashboard').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
@@ -931,8 +931,8 @@
                 renderExamResults();
                 renderRecentActivities();
                 showTab('dashboard'); // Tampilkan dashboard utama
-            } else if (username === 'guru' && password === 'guru123') {
-                document.getElementById('currentUserName').textContent = 'Guru';
+            } else if (username === 'guru_tahfidz' && password === 'guru123') {
+                document.getElementById('currentUserName').textContent = 'Guru Tahfidz';
                 document.getElementById('adminTeacherDashboard').classList.remove('hidden');
                 document.getElementById('parentDashboard').classList.add('hidden');
                 document.getElementById('mainContent').classList.remove('hidden');
@@ -1012,5 +1012,5 @@
             // Untuk saat ini, asumsikan pengguna perlu login setiap kali
         });
     </script>
-</body>
+    </body>
 </html>
