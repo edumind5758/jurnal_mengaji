@@ -252,7 +252,7 @@
                         <input type="text" id="studentNisInput" placeholder="Nomor Induk Santri" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Kelas</label>
+                        <label class="block text-xs font-xs font-medium text-gray-700 mb-1">Kelas</label>
                         <select id="studentClassInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
                             <option value="">Pilih Kelas</option>
                             <option value="A">A</option>
@@ -334,71 +334,72 @@
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                        <input type="text" id="editStudentName" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
-                            <select id="editStudentKibar" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                                <option value="Kibar A">Kibar A</option>
-                                <option value="Kibar B">Kibar B</option>
-                                <option value="Kibar C">Kibar C</option>
                                 <option value="Al Quran">Al Quran</option>
                             </select>
                         </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <input type="text" id="editStudentName" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Capaian Kibar</label>
+                        <select id="editStudentKibar" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                            <option value="Kibar A">Kibar A</option>
+                            <option value="Kibar B">Kibar B</option>
+                            <option value="Kibar C">Kibar C</option>
+                            <option value="Al Quran">Al Quran</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
+                        <select id="editStudentJuz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                            <option value="19">19</option>
+                            <option value="20">20</option>
+                            <option value="21">21</option>
+                            <option value="22">22</option>
+                            <option value="23">23</option>
+                            <option value="24">24</option>
+                            <option value="25">25</option>
+                            <option value="26">26</option>
+                            <option value="27">27</option>
+                            <option value="28">28</option>
+                            <option value="29">29</option>
+                            <option value="30">30</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-xs font-medium text-gray-700 mb-1">Juz Tahfidz</label>
-                            <select id="editStudentJuz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                                <option value="6">6</option>
-                                <option value="7">7</option>
-                                <option value="8">8</option>
-                                <option value="9">9</option>
-                                <option value="10">10</option>
-                                <option value="11">11</option>
-                                <option value="12">12</option>
-                                <option value="13">13</option>
-                                <option value="14">14</option>
-                                <option value="15">15</option>
-                                <option value="16">16</option>
-                                <option value="17">17</option>
-                                <option value="18">18</option>
-                                <option value="19">19</option>
-                                <option value="20">20</option>
-                                <option value="21">21</option>
-                                <option value="22">22</option>
-                                <option value="23">23</option>
-                                <option value="24">24</option>
-                                <option value="25">25</option>
-                                <option value="26">26</option>
-                                <option value="27">27</option>
-                                <option value="28">28</option>
-                                <option value="29">29</option>
-                                <option value="30">30</option>
-                            </select>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahsin</label>
+                            <input type="number" id="editStudentTahsin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahsin</label>
-                        <input type="number" step="0.01" id="editStudentTahsin" placeholder="Nilai Tahsin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Progress Tahfidz (%)</label>
-                        <input type="number" step="0.01" id="editStudentTahfidz" placeholder="Progress Tahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahfidz</label>
+                            <input type="number" id="editStudentTahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" min="0" max="100" step="0.01">
+                        </div>
                     </div>
                 </div>
                 <div class="flex space-x-2 mt-4">
                     <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Perubahan
+                        Perbarui Data
                     </button>
                     <button type="button" onclick="hideEditStudentModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
                         Batal
@@ -407,31 +408,31 @@
             </form>
         </div>
     </div>
-
+    
     <div id="addJournalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
         <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
             <h3 class="text-base font-semibold mb-3">Tambah Jurnal Harian</h3>
             <form onsubmit="addJournalEntry(event)">
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Santri</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal</label>
+                        <input type="date" id="journalDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
                         <select id="journalStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
                             <option value="">Pilih Santri</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal</label>
-                        <input type="date" id="journalDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan</label>
-                        <textarea id="journalNotesInput" rows="3" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" placeholder="Contoh: Mengulang hafalan surah Ar-Rahman" required></textarea>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Catatan Mengaji</label>
+                        <textarea id="journalNotesInput" rows="3" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required></textarea>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Status</label>
                         <select id="journalStatusInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" required>
                             <option value="Selesai">Selesai</option>
-                            <option value="Dalam Proses">Dalam Proses</option>
+                            <option value="Belum Selesai">Belum Selesai</option>
                         </select>
                     </div>
                 </div>
@@ -449,25 +450,25 @@
 
     <div id="addExamModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-2">
         <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
-            <h3 class="text-base font-semibold mb-3">Jadwal Ujian Baru</h3>
+            <h3 class="text-base font-semibold mb-3">Jadwalkan Ujian</h3>
             <form onsubmit="addExamSchedule(event)">
                 <div class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Mata Pelajaran/Materi</label>
-                        <input type="text" id="examSubjectInput" placeholder="Contoh: Ujian Tahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
-                    </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Tanggal Ujian</label>
                         <input type="date" id="examDateInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Keterangan</label>
-                        <textarea id="examDescriptionInput" rows="2" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" placeholder="Contoh: Juz 30"></textarea>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
+                        <input type="text" id="examSubjectInput" placeholder="Tahsin, Tahfidz Juz 30, dll." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Deskripsi Tambahan</label>
+                        <textarea id="examDescriptionInput" rows="3" placeholder="Misal: Ujian hafalan surat An-Naba" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-purple-500 focus:border-purple-500"></textarea>
                     </div>
                 </div>
                 <div class="flex space-x-2 mt-4">
                     <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded text-sm font-medium">
-                        Simpan Jadwal
+                        Jadwalkan
                     </button>
                     <button type="button" onclick="hideAddExamModal()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded text-sm font-medium">
                         Batal
@@ -481,26 +482,24 @@
         <div class="bg-white rounded-lg p-4 max-w-sm w-full max-h-screen overflow-y-auto">
             <h3 class="text-base font-semibold mb-3">Input Hasil Ujian</h3>
             <form onsubmit="addExamResult(event)">
-             <div class="space-y-3">
-    <div>
-        <label class="block text-xs font-medium text-gray-700 mb-1">Nilai Tahsin</label>
-        <input type="number" step="0.01" id="editStudentTahsin" placeholder="Nilai Tahsin" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
-    </div>
-    <div>
-        <label class="block text-xs font-medium text-gray-700 mb-1">Progress Tahfidz (%)</label>
-        <input type="number" step="0.01" id="editStudentTahfidz" placeholder="Progress Tahfidz" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500">
-    </div>
-</div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi</label>
-                        <input type="text" id="examResultSubjectInput" placeholder="Contoh: Tahfidz Juz 30" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Pilih Santri</label>
+                        <select id="examStudentIdInput" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                            <option value="">Pilih Santri</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Materi Ujian</label>
+                        <input type="text" id="examResultSubjectInput" placeholder="Materi Ujian" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nilai</label>
-                        <input type="number" step="0.01" id="examScoreInput" placeholder="Contoh: 95.5" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
+                        <input type="number" id="examScoreInput" placeholder="Contoh: 85.5" step="0.01" min="0" max="100" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" required>
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Catatan</label>
-                        <textarea id="examResultNotesInput" rows="2" class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500" placeholder="Contoh: Lancar, perlu pengulangan di surah An-Naba"></textarea>
+                        <textarea id="examResultNotesInput" rows="3" placeholder="Catatan tambahan..." class="w-full border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-1 focus:ring-orange-500 focus:border-orange-500"></textarea>
                     </div>
                 </div>
                 <div class="flex space-x-2 mt-4">
@@ -526,8 +525,8 @@
             const tableBody = document.getElementById('studentsTable');
             tableBody.innerHTML = '';
             filteredStudents.forEach((student, index) => {
-                const tahsinScore = student.tahsinScore !== null ? student.tahsinScore.toFixed(2) : 'N/A';
-                const tahfidzProgress = student.tahfidzProgress !== null ? student.tahfidzProgress.toFixed(2) + '%' : 'N/A';
+                const tahsinScore = student.tahsinScore ? student.tahsinScore.toFixed(2) : 'N/A';
+                const tahfidzProgress = student.tahfidzProgress ? student.tahfidzProgress.toFixed(2) + '%' : 'N/A';
                 const row = document.createElement('tr');
                 row.className = 'bg-white border-b hover:bg-gray-50';
                 row.innerHTML = `
@@ -737,14 +736,8 @@
             const name = document.getElementById('editStudentName').value;
             const kibarAchievement = document.getElementById('editStudentKibar').value;
             const juzTahfidz = document.getElementById('editStudentJuz').value;
-
-            // Perbaikan di sini: Cek apakah input kosong sebelum diubah menjadi angka
-            const tahsinInput = document.getElementById('editStudentTahsin').value;
-            const tahfidzInput = document.getElementById('editStudentTahfidz').value;
-
-            const tahsinScore = tahsinInput === '' ? null : parseFloat(tahsinInput);
-            const tahfidzProgress = tahfidzInput === '' ? null : parseFloat(tahfidzInput);
-
+            const tahsinScore = parseFloat(document.getElementById('editStudentTahsin').value);
+            const tahfidzProgress = parseFloat(document.getElementById('editStudentTahfidz').value);
             studentData[index].nis = nis;
             studentData[index].class = studentClass;
             studentData[index].name = name;
@@ -752,7 +745,6 @@
             studentData[index].juzTahfidz = juzTahfidz;
             studentData[index].tahsinScore = tahsinScore;
             studentData[index].tahfidzProgress = tahfidzProgress;
-
             localStorage.setItem('studentData', JSON.stringify(studentData));
             renderStudentsTable();
             updateAchievementCounts();
@@ -986,8 +978,8 @@
 
             // Update judul dan info anak
             document.getElementById('childProgressTitle').textContent = `Progress ${child.name}`;
-            document.getElementById('childTahsinScore').textContent = child.tahsinScore !== null ? child.tahsinScore.toFixed(2) : 'N/A';
-            document.getElementById('childTahfidzProgress').textContent = child.tahfidzProgress !== null ? child.tahfidzProgress.toFixed(2) + '%' : 'N/A';
+            document.getElementById('childTahsinScore').textContent = child.tahsinScore ? child.tahsinScore.toFixed(2) : 'N/A';
+            document.getElementById('childTahfidzProgress').textContent = child.tahfidzProgress ? child.tahfidzProgress.toFixed(2) + '%' : 'N/A';
             document.getElementById('childClass').textContent = `Kelas: ${child.class}`;
 
             // Tampilkan aktivitas mengaji
@@ -1020,5 +1012,5 @@
             // Untuk saat ini, asumsikan pengguna perlu login setiap kali
         });
     </script>
-</body>
+    </body>
 </html>
