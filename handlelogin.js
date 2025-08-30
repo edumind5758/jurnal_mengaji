@@ -4,7 +4,14 @@ function renderParentDashboard(studentId) {
 
     // Update judul dan info anak
     document.getElementById('childProgressTitle').textContent = `Progress ${child.name}`;
+
+    // Update Capaian Kibar/Al Quran
+    document.getElementById('childKibarAchievement').textContent = child.kibarAchievement || 'N/A';
+    
+    // Update Progress Tahfidz
     document.getElementById('childTahfidzProgress').textContent = child.tahfidzProgress !== null ? child.tahfidzProgress.toFixed(2) + '%' : 'N/A';
+    
+    // Update Kelas
     document.getElementById('childClass').textContent = `Kelas: ${child.class}`;
 
     // Tampilkan aktivitas mengaji
